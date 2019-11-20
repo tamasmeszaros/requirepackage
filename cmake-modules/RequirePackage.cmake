@@ -94,6 +94,13 @@ function(download_package)
         message(STATUS "-----------------------------------------------------------------------------")
                     
         file(MAKE_DIRECTORY ${RP_BUILD_PATH})
+
+        if (APPLE)
+            if (NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+                set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
+            endif ()
+            list (APPEND _configs_line "-DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+        endif()
         
         execute_process(
             COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -A "${CMAKE_GENERATOR_PLATFORM}"

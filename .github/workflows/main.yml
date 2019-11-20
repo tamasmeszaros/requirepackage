@@ -13,3 +13,12 @@ jobs:
       run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev
     - name: Build the example
       run: mkdir -p build-gcc && cd build-gcc && cmake .. -DRP_ENABLE_DOWNLOADING=ON
+
+  build-mac:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the example
+      run: mkdir -p build-mac && cd build-mac && cmake .. -DRP_ENABLE_DOWNLOADING=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
