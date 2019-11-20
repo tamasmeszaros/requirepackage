@@ -21,8 +21,6 @@ if (NOT RP_PACKAGES)
     subdirlist(RP_PACKAGES ${CMAKE_CURRENT_LIST_DIR})
 endif()
 
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
-
 # If RP_PACKAGE is defined and non-empty, this subdir was called by RequirePackage module.
 # Otherwise it was called by another means as a normal subdirectory or parent project
 
