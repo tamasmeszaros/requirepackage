@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 20b9bd011..e4e82d348 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1156,6 +1156,8 @@ set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
+ set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
+ set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
+ 
++list(APPEND CURL_LIBS ${CMAKE_DL_LIBS})
++
+ if(USE_MANUAL)
+   add_subdirectory(docs)
+ endif()
