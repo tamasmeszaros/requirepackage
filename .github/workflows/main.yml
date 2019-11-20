@@ -9,5 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: Install opengl
+      run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev
     - name: Build the example
       run: mkdir -p build-gcc && cd build-gcc && cmake .. -DRP_ENABLE_DOWNLOADING=ON
