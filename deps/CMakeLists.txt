@@ -38,11 +38,6 @@ function(require_dependency dep_name )
   
   # set(dep_ver ${ARGV1})
 
-  set(_QUIET "")
-  if (RP_FIND_QUIETLY) 
-    set(_QUIET "QUIET")
-  endif ()
-
   # TODO: Forward the highest version of RP and RD VERSION
   # TODO: Forward the union of components of RP and RD COMPONENTS and OPTIONAL COMPONENTS
 
@@ -52,7 +47,7 @@ function(require_dependency dep_name )
     find_package(${dep_name} ${dep_ver} QUIET ${RD_ARGS_UNPARSED_ARGUMENTS})
     
     if(NOT RP_${dep_name}_FOUND AND ${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
-      message(STATUS "Using package ${dep_name} from system.")
+      message(STATUS "Linking SYSTEM package ${dep_name} to ${PACKAGE} as a dependency.")
     endif()
 
     if(NOT RP_${dep_name}_FOUND AND NOT ${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
@@ -63,9 +58,21 @@ function(require_dependency dep_name )
   endif()
 
   if(NOT ${dep_name}_FOUND)
-    list(APPEND ${PACKAGE}_DEPENDS rp_${dep_name})
-    list(REMOVE_DUPLICATES ${PACKAGE}_DEPENDS)
-    set(${PACKAGE}_DEPENDS "${${PACKAGE}_DEPENDS}" CACHE INTERNAL "")
+    list(FIND ${dep_name}) RP_PACKAGES _idx)
+    if (_idx LESS 0)
+      set(_errstr "Package ${dep_name} cannot be found.")
+      if (RP_FIND_REQUIRED AND RD_ARGS_REQUIRED)
+        message(FATAL_ERROR ${_errstr})
+      endif()
+
+      if (NOT RP_FIND_QUIETLY AND NOT RD_FIND_QUIETLY)
+        message(WARNING ${_errstr})
+      endif()
+    else()
+      list(APPEND ${PACKAGE}_DEPENDS rp_${dep_name})
+      list(REMOVE_DUPLICATES ${PACKAGE}_DEPENDS)
+      set(${PACKAGE}_DEPENDS "${${PACKAGE}_DEPENDS}" CACHE INTERNAL "")
+    endif()
   endif()
 endfunction()
 

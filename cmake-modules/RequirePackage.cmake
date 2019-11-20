@@ -103,6 +103,7 @@ function(download_package)
                     -D "CMAKE_INSTALL_PREFIX:PATH=${RP_ARGS_INSTALL_PATH}"
                     -D "RP_FORCE_DOWNLOADING:BOOL=${RP_FORCE_DOWNLOADING}"
                     -D "RP_FIND_QUIETLY:BOOL=${RP_ARGS_QUIET}"
+                    -D "RP_FIND_REQUIRED:BOOL=${RP_ARGS_REQUIRED}"
                     -D "BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
                     -D "AS_RP_PROCESS:INTERNAL=TRUE"
                     ${_configs_line}
@@ -142,6 +143,8 @@ function(download_package)
                     -D "RP_${RP_ARGS_PACKAGE}_VERSION=\"${RP_ARGS_VERSION}\""
                     -D "CMAKE_BUILD_TYPE:STRING=${_conf}"
                     -D "AS_RP_PROCESS:INTERNAL=TRUE"
+                    -D "RP_FIND_QUIETLY:BOOL=${RP_ARGS_QUIET}"
+                    -D "RP_FIND_REQUIRED:BOOL=${RP_ARGS_REQUIRED}"
                     ${RP_ARGS_REPOSITORY_PATH}
                 RESULT_VARIABLE CONFIG_STEP_RESULT
                 #OUTPUT_VARIABLE CONFIG_STEP_OUTP
