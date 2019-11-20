@@ -13,6 +13,8 @@ jobs:
       run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev
     - name: Build the example
       run: mkdir -p build-gcc && cd build-gcc && cmake .. -DRP_ENABLE_DOWNLOADING=ON
+    - name: Build all packages
+      run: mkdir -p build-all-gcc && cd build-all-gcc && cmake ../deps -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build . -- -j4
 
   build-mac:
 
@@ -22,6 +24,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build the example
       run: mkdir -p build-mac && cd build-mac && cmake .. -DRP_ENABLE_DOWNLOADING=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
+    - name: Build all packages
+      run: mkdir -p build-all-mac && cd build-all-mac && cmake ../deps -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build . -- -j4
 
   build-msvc:
 
@@ -34,3 +38,9 @@ jobs:
         mkdir build-win 
         cd build-win 
         cmake .. -DRP_ENABLE_DOWNLOADING=ON
+    - name: Build all packages
+      run: |
+        mkdir build-all-win
+        cd build-all-win
+        cmake ../deps -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
+        cmake --build . -- /m
