@@ -1,11 +1,19 @@
 # RP Package manager default install dir will be set globally
 set(RP_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dependencies CACHE STRING "Dependencies location")
-set(RP_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES} CACHE STRING "Build configurations for the dependencies")
+
+if (MSVC)
+    set(_default_confs "Release;Debug")
+else()
+    set(_default_confs "Release")
+endif()
+
+set(RP_CONFIGURATION_TYPES ${_default_confs} CACHE STRING "Build configurations for the dependencies")
 option(RP_ENABLE_DOWNLOADING "Enable downloading of bundled packages if not found in system." OFF)
+
 include(CMakeDependentOption)
 cmake_dependent_option(RP_FORCE_DOWNLOADING "Force downloading packages even if found." OFF "RP_ENABLE_DOWNLOADING" OFF)
-set(RP_REPOSITORY_DIR ${PROJECT_SOURCE_DIR}/deps CACHE STRING "Package repository location")
 
+set(RP_REPOSITORY_DIR ${PROJECT_SOURCE_DIR}/deps CACHE STRING "Package repository location")
 set(RP_BUILD_PATH ${PROJECT_BINARY_DIR}/rp_packages_build CACHE STRING "Binary dir for downloaded package builds")
 
 mark_as_advanced(RP_BUILD_PATH)
@@ -85,8 +93,12 @@ function(download_package)
 
     set(_configs_line "")
     if (_is_multi)
-        set(_configs_line "-DCMAKE_CONFIGURATION_TYPES=${RP_CONFIGURATION_TYPES}")
+        set(_configs_line "-DCMAKE_CONFIGURATION_TYPES:STRING=${_CONFIGS}")
+    else ()
+        set(_configs_line "-DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}")
     endif ()
+
+    message(STATUS "Configs line: ${_configs_line}")
 
     if(NOT RP_ARGS_QUIET AND NOT EXISTS ${RP_BUILD_PATH})
         message(STATUS "-----------------------------------------------------------------------------")
@@ -95,11 +107,12 @@ function(download_package)
                     
         file(MAKE_DIRECTORY ${RP_BUILD_PATH})
 
+        set(_apple_line "")
         if (APPLE)
             if (NOT CMAKE_OSX_DEPLOYMENT_TARGET)
                 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
             endif ()
-            list (APPEND _configs_line "-DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+            list (APPEND _apple_line "-DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
         endif()
         
         execute_process(
@@ -113,7 +126,8 @@ function(download_package)
                     -D "RP_FIND_REQUIRED:BOOL=OFF"
                     -D "BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
                     -D "AS_RP_PROCESS:INTERNAL=TRUE"
-                    ${_configs_line}
+                    "${_configs_line}"
+                    ${_apple_line}
                 ${RP_ARGS_REPOSITORY_PATH}
             RESULT_VARIABLE CONFIG_STEP_RESULT
             ${OUTPUT_QUIET}
@@ -141,6 +155,10 @@ function(download_package)
             message(STATUS "Building config: ${_conf} of package ${RP_ARGS_PACKAGE}")
         endif()
 
+        if (NOT _is_multi)
+            set(_configs_line "-DCMAKE_BUILD_TYPE:STRING=${_conf}")
+        endif ()
+
         if(NOT _configured OR NOT _is_multi)
             execute_process(
                 COMMAND ${CMAKE_COMMAND}
@@ -148,10 +166,10 @@ function(download_package)
                     -D "RP_${RP_ARGS_PACKAGE}_COMPONENTS=\"${RP_ARGS_COMPONENTS}\""
                     -D "RP_${RP_ARGS_PACKAGE}_OPTIONAL_COMPONENTS=\"${RP_ARGS_OPTIONAL_COMPONENTS}\""
                     -D "RP_${RP_ARGS_PACKAGE}_VERSION=\"${RP_ARGS_VERSION}\""
-                    -D "CMAKE_BUILD_TYPE:STRING=${_conf}"
                     -D "AS_RP_PROCESS:INTERNAL=ON"
                     -D "RP_FIND_QUIETLY:BOOL=${RP_ARGS_QUIET}"
                     -D "RP_FIND_REQUIRED:BOOL=${RP_ARGS_REQUIRED}"
+                    "${_configs_line}"
                     ${RP_ARGS_REPOSITORY_PATH}
                 RESULT_VARIABLE CONFIG_STEP_RESULT
                 #OUTPUT_VARIABLE CONFIG_STEP_OUTP

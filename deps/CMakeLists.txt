@@ -96,6 +96,12 @@ if (APPLE)
     set (DEP_OSX_TARGET ${RP_OSX_TARGET})
 endif ()
 
+add_custom_target(rp ALL)
+
+if (RP_PACKAGE)
+  add_dependencies(rp rp_${RP_PACKAGE})
+endif ()
+
 foreach(PACKAGE IN ITEMS ${RP_PACKAGES})
   if(_is_multi)
     set(RP_PACKAGE_BUILD_DIR "rp_${PACKAGE}-build/")
@@ -114,7 +120,6 @@ foreach(PACKAGE IN ITEMS ${RP_PACKAGES})
 endforeach()
 
 if (NOT AS_RP_PROCESS)
-  add_custom_target(rp ALL)
   foreach(_pkg ${RP_ALL_TARGETS})
     add_dependencies(rp rp_${_pkg})
   endforeach()
