@@ -4,6 +4,8 @@ if (RP_PACKAGE STREQUAL "GLEW")
   message(STATUS "GLEW Sourcedir: ${CMAKE_CURRENT_LIST_DIR}/glew")
 endif()
 
+require_dependency(OpenGL REQUIRED)
+
 Externalproject_Add( 
   rp_GLEW
   # GIT_REPOSITORY https://github.com/nigels-com/glew.git

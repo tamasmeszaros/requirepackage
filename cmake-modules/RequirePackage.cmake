@@ -103,7 +103,7 @@ function(download_package)
                     -D "CMAKE_INSTALL_PREFIX:PATH=${RP_ARGS_INSTALL_PATH}"
                     -D "RP_FORCE_DOWNLOADING:BOOL=${RP_FORCE_DOWNLOADING}"
                     -D "RP_FIND_QUIETLY:BOOL=${RP_ARGS_QUIET}"
-                    -D "RP_FIND_REQUIRED:BOOL=${RP_ARGS_REQUIRED}"
+                    -D "RP_FIND_REQUIRED:BOOL=OFF"
                     -D "BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
                     -D "AS_RP_PROCESS:INTERNAL=TRUE"
                     ${_configs_line}
@@ -142,7 +142,7 @@ function(download_package)
                     -D "RP_${RP_ARGS_PACKAGE}_OPTIONAL_COMPONENTS=\"${RP_ARGS_OPTIONAL_COMPONENTS}\""
                     -D "RP_${RP_ARGS_PACKAGE}_VERSION=\"${RP_ARGS_VERSION}\""
                     -D "CMAKE_BUILD_TYPE:STRING=${_conf}"
-                    -D "AS_RP_PROCESS:INTERNAL=TRUE"
+                    -D "AS_RP_PROCESS:INTERNAL=ON"
                     -D "RP_FIND_QUIETLY:BOOL=${RP_ARGS_QUIET}"
                     -D "RP_FIND_REQUIRED:BOOL=${RP_ARGS_REQUIRED}"
                     ${RP_ARGS_REPOSITORY_PATH}
@@ -208,7 +208,7 @@ macro(require_package RP_ARGS_PACKAGE)
     
     if(NOT ${RP_ARGS_PACKAGE}_FOUND)
         if (RP_ENABLE_DOWNLOADING)
-            download_package(${RP_ARGS_PACKAGE} ${RP_ARGS_VERSION} ${_QUIET} ${RP_ARGS_UNPARSED_ARGUMENTS} )
+            download_package(${RP_ARGS_PACKAGE} ${RP_ARGS_VERSION} ${_QUIET} ${_REQUIRED} ${RP_ARGS_UNPARSED_ARGUMENTS} )
         endif()
 
         find_package(${RP_ARGS_PACKAGE} ${RP_ARGS_VERSION} 

@@ -19,6 +19,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
       INSTALL_COMMAND make install_sw
   )
 
+  list(APPEND RP_PACKAGES "OpenSSL")
   require_dependency(OpenSSL)
 endif ()
 

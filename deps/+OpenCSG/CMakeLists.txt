@@ -1,6 +1,6 @@
 include(ExternalProject)
 
-require_dependency(GLEW VERSION 1.13.0)
+require_dependency(GLEW VERSION 1.13.0 REQUIRED)
 
 ExternalProject_Add(rp_OpenCSG
     GIT_REPOSITORY https://github.com/floriankirsch/OpenCSG.git
