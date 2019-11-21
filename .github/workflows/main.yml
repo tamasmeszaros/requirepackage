@@ -3,6 +3,13 @@ name: CI
 on: [push]
 
 jobs:
+  # buid-gcc-centos6:
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: docker.pkg.github.com/tamasmeszaros/requirepackage/centos6-devtoolset7:latest
+  #   steps:
+  #     - name: Hello
+  #       run: ninja-build --version
   build-gcc:
 
     runs-on: ubuntu-latest
@@ -14,7 +21,7 @@ jobs:
     - name: Build the example
       run: mkdir -p build-gcc && cd build-gcc && cmake .. -DRP_ENABLE_DOWNLOADING=ON
     - name: Build all packages
-      run: mkdir -p build-all-gcc && cd build-all-gcc && cmake ../deps -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build . -- -j4
+      run: mkdir -p build-all-gcc && cd build-all-gcc && cmake ../deps -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build .
 
   build-mac:
 
@@ -25,7 +32,7 @@ jobs:
     - name: Build the example
       run: mkdir -p build-mac && cd build-mac && cmake .. -DRP_ENABLE_DOWNLOADING=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
     - name: Build all packages
-      run: mkdir -p build-all-mac && cd build-all-mac && cmake ../deps -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build . -- -j4
+      run: mkdir -p build-all-mac && cd build-all-mac && cmake ../deps -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build .
 
   build-msvc:
 
@@ -43,4 +50,4 @@ jobs:
         mkdir build-all-win
         cd build-all-win
         cmake ../deps -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
-        cmake --build . -- /m
+        cmake --build .
