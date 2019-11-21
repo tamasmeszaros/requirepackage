@@ -15,10 +15,8 @@ e63775855294b50820ef44d1b157f4de1cc38d3e #v1.17.0
 rp_add_cmake_project(Blosc
     GIT_REPOSITORY https://github.com/Blosc/c-blosc.git
     GIT_TAG ${_blosc_tag}
-    PATCH_COMMAND       ${GIT_EXECUTABLE} reset --hard ${_blosc_tag} && ${GIT_EXECUTABLE} clean -df && 
-                        ${GIT_EXECUTABLE} config user.name "requirepackage" && 
-                        ${GIT_EXECUTABLE} config user.email "requirepackage@github.com" && 
-                        ${GIT_EXECUTABLE} am ${CMAKE_CURRENT_SOURCE_DIR}/blosc-mods.patch
+    PATCH_COMMAND       ${GIT_EXECUTABLE} reset --hard && ${GIT_EXECUTABLE} clean -df &&
+                        ${GIT_EXECUTABLE} apply --whitespace=nowarn ${CMAKE_CURRENT_SOURCE_DIR}/blosc-mods.patch
     CMAKE_ARGS
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON
         -DBUILD_SHARED=${_build_shared} 
