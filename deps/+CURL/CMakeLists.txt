@@ -26,13 +26,13 @@ endif ()
 set(_curl_platform_flags "")
 if (APPLE)
     set(_curl_platform_flags 
-        -DCMAKE_USE_SECTRANSP:BOOL=ON 
+        -DCMAKE_USE_DARWINSSL:BOOL=ON 
         -DCMAKE_USE_OPENSSL:BOOL=OFF
-        -DCURL_CA_PATH:STRING=none
+        # -DCURL_CA_PATH:STRING=none
         -DENABLE_IPV6:BOOL=ON
-        -DENABLE_THREADED_RESOLVER:BOOL=ON
-        -DCURL_DISABLE_LDAP:BOOL=ON
-        -DCURL_DISABLE_LDAPS:BOOL=ON
+        # -DENABLE_THREADED_RESOLVER:BOOL=ON
+        # -DCURL_DISABLE_LDAP:BOOL=ON
+        # -DCURL_DISABLE_LDAPS:BOOL=ON
         -DENABLE_MANUAL:BOOL=OFF
         # -DCURL_DISABLE_RTSP:BOOL=ON
         # -DCURL_DISABLE_DICT:BOOL=ON
@@ -43,9 +43,9 @@ if (APPLE)
         # -DCURL_DISABLE_IMAP:BOOL=ON
         # -DCURL_DISABLE_GOPHER:BOOL=ON
         # -DCURL_DISABLE_CRYPTO_AUTH:BOOL=ON
-        -DCMAKE_USE_GSSAPI:BOOL=OFF
-        -DCMAKE_USE_LIBSSH2:BOOL=OFF
-        -DUSE_NGHTTP2:BOOL=OFF
+        # -DCMAKE_USE_GSSAPI:BOOL=OFF
+        # -DCMAKE_USE_LIBSSH2:BOOL=OFF
+        # -DUSE_NGHTTP2:BOOL=OFF
 
         # --enable-versioned-symbols
         
@@ -78,11 +78,11 @@ require_dependency(ZLIB)
 Externalproject_Add( 
   rp_CURL
   GIT_REPOSITORY      https://github.com/curl/curl.git
-  GIT_TAG             curl-7_67_0
+  GIT_TAG             curl-7_58_0
   INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
   BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
-  PATCH_COMMAND       ${GIT_EXECUTABLE} checkout -f -- . && git clean -df && 
-                      ${GIT_EXECUTABLE} apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/curl-mods.patch
+  # PATCH_COMMAND       ${GIT_EXECUTABLE} checkout -f -- . && git clean -df && 
+  #                     ${GIT_EXECUTABLE} apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/curl-mods.patch
   CMAKE_ARGS         
     -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
@@ -91,5 +91,6 @@ Externalproject_Add(
     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
     -DCMAKE_DEBUG_POSTFIX=d
     -DBUILD_TESTING:BOOL=OFF
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON
     ${_curl_platform_flags}
 )
