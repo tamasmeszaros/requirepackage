@@ -101,7 +101,7 @@ set(_build_cmd ${_build_cmd}
                ${_boost_flags}
                -j${NPROC}
                ${_libs}
-               --layout=versioned
+               #--layout=versioned
                toolset=${_boost_toolset}
                address-model=${_bits}
                link=${_link}

@@ -80,12 +80,16 @@ include(ExternalProject)
 
 function(rp_add_cmake_project projectname)
 
-  cmake_parse_arguments(P_ARGS "" "" "" ${ARGN})
+  cmake_parse_arguments(P_ARGS "" "INSTALL_DIR;BINARY_DIR" "CMAKE_ARGS" ${ARGN})
 
   set(_configs_line -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE})
   
   if (_is_multi)
-    set(_configs_line "-DCMAKE_CONFIGURATION_TYPES:STRING=${CMAKE_CONFIGURATION_TYPES}")
+    #string(REPLACE ";" " " _configs "${CMAKE_CONFIGURATION_TYPES}")
+    #set(_configs_line "-DCMAKE_CONFIGURATION_TYPES:STRING=${_configs}")
+    set(_configs_line "")
+  else ()
+    set(_configs_line -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE})
   endif ()
 
   ExternalProject_Add(
@@ -93,13 +97,14 @@ function(rp_add_cmake_project projectname)
       INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
       BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
       CMAKE_ARGS         
-          -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-          -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX}
-          -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-          -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-          -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-          -DCMAKE_DEBUG_POSTFIX=d
+          -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_INSTALL_PREFIX}
+          -DCMAKE_PREFIX_PATH:STRING=${CMAKE_INSTALL_PREFIX}
+          -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
+          -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+          -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
+          -DCMAKE_DEBUG_POSTFIX:STRING=d
           "${_configs_line}"
+          ${P_ARGS_CMAKE_ARGS}
      ${P_ARGS_UNPARSED_ARGUMENTS}
   )
 
