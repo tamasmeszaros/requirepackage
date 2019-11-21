@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
+project(EXPAT)
+
 add_library(expat
     xmlparse.c
     xmlrole.c

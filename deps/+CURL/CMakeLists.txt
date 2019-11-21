@@ -25,7 +25,52 @@ endif ()
 
 set(_curl_platform_flags "")
 if (APPLE)
-    set(_curl_platform_flags -DCMAKE_USE_SECTRANSP:BOOL=ON -DCMAKE_USE_OPENSSL:BOOL=OFF)
+    set(_curl_platform_flags 
+        -DCMAKE_USE_SECTRANSP:BOOL=ON 
+        -DCMAKE_USE_OPENSSL:BOOL=OFF
+        -DCURL_CA_PATH:STRING=none
+        -DENABLE_IPV6:BOOL=ON
+        -DENABLE_THREADED_RESOLVER:BOOL=ON
+        -DCURL_DISABLE_LDAP:BOOL=ON
+        -DCURL_DISABLE_LDAPS:BOOL=ON
+        -DENABLE_MANUAL:BOOL=OFF
+        # -DCURL_DISABLE_RTSP:BOOL=ON
+        # -DCURL_DISABLE_DICT:BOOL=ON
+        # -DCURL_DISABLE_TELNET:BOOL=ON
+        # -DCURL_DISABLE_POP3:BOOL=ON
+        # -DCURL_DISABLE_TELNET:BOOL=ON
+        # -DCURL_DISABLE_IMAP:BOOL=ON
+        # -DCURL_DISABLE_IMAP:BOOL=ON
+        # -DCURL_DISABLE_GOPHER:BOOL=ON
+        # -DCURL_DISABLE_CRYPTO_AUTH:BOOL=ON
+        -DCMAKE_USE_GSSAPI:BOOL=OFF
+        -DCMAKE_USE_LIBSSH2:BOOL=OFF
+        -DUSE_NGHTTP2:BOOL=OFF
+
+        # --enable-versioned-symbols
+        
+        # --disable-imap
+        # --disable-smb
+        # --disable-smtp
+        # --disable-gopher
+        # --disable-crypto-auth
+        # --without-gssapi
+        # --without-libpsl
+        # --without-libidn2
+        # --without-gnutls
+        # --without-polarssl
+        # --without-mbedtls
+        # --without-cyassl
+        # --without-nss
+        # --without-axtls
+        # --without-brotli
+        # --without-libmetalink
+        # --without-libssh
+        # --without-libssh2
+        # --without-librtmp
+        # --without-nghttp2
+        # --without-zsh-functions-dir
+        )
 endif ()
 
 require_dependency(ZLIB)
