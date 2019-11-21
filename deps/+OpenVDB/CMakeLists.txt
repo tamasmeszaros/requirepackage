@@ -22,7 +22,9 @@ ExternalProject_Add(rp_OpenVDB
     GIT_TAG ${_openvdb_tag}
     INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
     BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
-    PATCH_COMMAND       ${GIT_EXECUTABLE} reset --hard ${_openvdb_tag} && git clean -df && 
+    PATCH_COMMAND       ${GIT_EXECUTABLE} reset --hard ${_openvdb_tag} && git clean -df &&
+                        ${GIT_EXECUTABLE} config user.name "requirepackage" && 
+                        ${GIT_EXECUTABLE} config user.email "requirepackage@github.com" && 
                         ${GIT_EXECUTABLE} am ${CMAKE_CURRENT_SOURCE_DIR}/openvdb-mods.patch
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
