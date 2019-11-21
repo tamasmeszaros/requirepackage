@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 20b9bd011..e4e82d348 100644
+index 490cc19ef..4a3542a60 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1156,6 +1156,8 @@ set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
- set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
- set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
+@@ -1137,6 +1137,8 @@ else()
+     set(CURL_INSTALL_CMAKE_DIR lib/cmake/curl)
+ endif()
  
 +list(APPEND CURL_LIBS ${CMAKE_DL_LIBS})
 +

@@ -87,8 +87,8 @@ Externalproject_Add(
   GIT_TAG             curl-7_58_0
   INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
   BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
-  # PATCH_COMMAND       ${GIT_EXECUTABLE} checkout -f -- . && git clean -df && 
-  #                     ${GIT_EXECUTABLE} apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/curl-mods.patch
+  PATCH_COMMAND       ${GIT_EXECUTABLE} checkout -f -- . && git clean -df && 
+                      ${GIT_EXECUTABLE} apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/curl-mods.patch
   CMAKE_ARGS         
     -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
