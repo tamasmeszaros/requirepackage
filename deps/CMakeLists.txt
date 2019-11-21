@@ -76,6 +76,35 @@ function(require_dependency dep_name )
   endif()
 endfunction()
 
+include(ExternalProject)
+
+function(rp_add_cmake_project projectname)
+
+  cmake_parse_arguments(P_ARGS "" "" "" ${ARGN})
+
+  set(_configs_line -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE})
+  
+  if (_is_multi)
+    set(_configs_line "-DCMAKE_CONFIGURATION_TYPES:STRING=${CMAKE_CONFIGURATION_TYPES}")
+  endif ()
+
+  ExternalProject_Add(
+      rp_${projectname}
+      INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
+      BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
+      CMAKE_ARGS         
+          -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+          -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX}
+          -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+          -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+          -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+          -DCMAKE_DEBUG_POSTFIX=d
+          "${_configs_line}"
+     ${P_ARGS_UNPARSED_ARGUMENTS}
+  )
+
+endfunction()
+
 if (APPLE)
     message("OS X SDK Path: ${CMAKE_OSX_SYSROOT}")
     if (CMAKE_OSX_DEPLOYMENT_TARGET)
