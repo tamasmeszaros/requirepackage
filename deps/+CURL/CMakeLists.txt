@@ -75,6 +75,12 @@ endif ()
 
 require_dependency(ZLIB)
 
+if (BUILD_SHARED_LIBS)
+  set(_curl_static OFF)
+else()
+  set(_curl_static ON)
+endif()
+
 Externalproject_Add( 
   rp_CURL
   GIT_REPOSITORY      https://github.com/curl/curl.git
@@ -92,5 +98,6 @@ Externalproject_Add(
     -DCMAKE_DEBUG_POSTFIX=d
     -DBUILD_TESTING:BOOL=OFF
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+    -DCURL_STATICLIB=${_curl_static}
     ${_curl_platform_flags}
 )
