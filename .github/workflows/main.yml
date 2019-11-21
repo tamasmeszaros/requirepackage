@@ -49,5 +49,5 @@ jobs:
       run: |
         mkdir build-all-win
         cd build-all-win
-        cmake ../deps -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
-        cmake --build .
+        cmake ../deps -DBUILD_SHARED_LIBS=OFF
+        cmake --build . --config Release
