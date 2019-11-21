@@ -25,7 +25,7 @@ endif ()
 
 set(_curl_platform_flags "")
 if (APPLE)
-    set(_curl_platform_flags -DCMAKE_USE_DARWINSSL:BOOL=ON -DCMAKE_USE_OPENSSL:BOOL=OFF)
+    set(_curl_platform_flags -DCMAKE_USE_SECTRANSP:BOOL=ON -DCMAKE_USE_OPENSSL:BOOL=OFF)
 endif ()
 
 require_dependency(ZLIB)
