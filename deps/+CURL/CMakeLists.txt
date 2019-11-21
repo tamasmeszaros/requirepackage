@@ -23,6 +23,11 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
   require_dependency(OpenSSL)
 endif ()
 
+set(_curl_platform_flags "")
+if (APPLE)
+    set(_curl_platform_flags -DCMAKE_USE_DARWINSSL:BOOL=ON -DCMAKE_USE_OPENSSL:BOOL=OFF)
+endif ()
+
 require_dependency(ZLIB)
 
 Externalproject_Add( 
@@ -41,4 +46,5 @@ Externalproject_Add(
     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
     -DCMAKE_DEBUG_POSTFIX=d
     -DBUILD_TESTING:BOOL=OFF
+    ${_curl_platform_flags}
 )
