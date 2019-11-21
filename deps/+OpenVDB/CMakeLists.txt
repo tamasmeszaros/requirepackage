@@ -13,13 +13,17 @@ else()
     set(_build_static ON)
 endif()
 
+set(_openvdb_tag 
+aebaf8d95be5e57fd33949281ec357db4a576c2e #v6.2.1
+)
+
 ExternalProject_Add(rp_OpenVDB
     GIT_REPOSITORY https://github.com/AcademySoftwareFoundation/openvdb.git
-    GIT_TAG aebaf8d95be5e57fd33949281ec357db4a576c2e #v6.2.1
+    GIT_TAG ${_openvdb_tag}
     INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
     BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
-    PATCH_COMMAND       ${GIT_EXECUTABLE} checkout -f -- . && git clean -df && 
-                        ${GIT_EXECUTABLE} apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/openvdb-mods.patch
+    PATCH_COMMAND       ${GIT_EXECUTABLE} reset --hard ${_openvdb_tag} && git clean -df && 
+                        ${GIT_EXECUTABLE} am ${CMAKE_CURRENT_SOURCE_DIR}/openvdb-mods.patch
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
         -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}

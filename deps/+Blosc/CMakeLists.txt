@@ -10,13 +10,17 @@ endif()
 
 require_dependency(ZLIB)
 
+set(_blosc_tag 
+e63775855294b50820ef44d1b157f4de1cc38d3e #v1.17.0
+)
+
 ExternalProject_Add(rp_Blosc
     GIT_REPOSITORY https://github.com/Blosc/c-blosc.git
-    GIT_TAG e63775855294b50820ef44d1b157f4de1cc38d3e #v1.17.0
+    GIT_TAG ${_blosc_tag}
     INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
     BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
-    PATCH_COMMAND       ${GIT_EXECUTABLE} reset --hard && ${GIT_EXECUTABLE} clean -df && 
-                        ${GIT_EXECUTABLE} apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/blosc-mods.patch
+    PATCH_COMMAND       ${GIT_EXECUTABLE} reset --hard ${_blosc_tag} && ${GIT_EXECUTABLE} clean -df && 
+                        ${GIT_EXECUTABLE} am ${CMAKE_CURRENT_SOURCE_DIR}/blosc-mods.patch
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
         -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
