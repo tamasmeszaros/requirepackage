@@ -54,6 +54,8 @@ target_link_libraries(opencsg PRIVATE GLEW::GLEW OpenGL::GL)
 
 include(CMakePackageConfigHelpers)
 
+include(GNUInstallDirs)
+
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"     
     VERSION 1.4.2
@@ -62,16 +64,16 @@ write_basic_package_version_file(
 
 install(TARGETS opencsg 
   EXPORT ${PROJECT_NAME}Targets
-  RUNTIME DESTINATION bin 
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  INCLUDES DESTINATION include)
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} 
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 export(EXPORT ${PROJECT_NAME}Targets 
        FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake" 
        NAMESPACE ${PROJECT_NAME}:: )
 
-set(ConfigPackageLocation lib/cmake/${PROJECT_NAME})
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 install(EXPORT ${PROJECT_NAME}Targets
   FILE
@@ -85,7 +87,7 @@ install(
     FILES
       ${PROJECT_SOURCE_DIR}/include/opencsg.h 
     DESTINATION
-      include/opencsg
+      ${CMAKE_INSTALL_INCLUDEDIR}/opencsg
 )
 install(
     FILES
