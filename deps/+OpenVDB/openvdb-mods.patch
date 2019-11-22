@@ -1,33 +1,19 @@
-From dbe038fce8a15ddc9a5c83ec5156d7bc9e178015 Mon Sep 17 00:00:00 2001
-From: tamasmeszaros <meszaros.q@gmail.com>
-Date: Wed, 16 Oct 2019 17:42:50 +0200
-Subject: [PATCH] Build fixes for PrusaSlicer integration
-
-Signed-off-by: tamasmeszaros <meszaros.q@gmail.com>
----
- CMakeLists.txt                  |   3 -
- cmake/FindBlosc.cmake           | 218 ---------------
- cmake/FindCppUnit.cmake         |   4 +-
- cmake/FindIlmBase.cmake         | 337 ----------------------
- cmake/FindOpenEXR.cmake         | 329 ----------------------
- cmake/FindOpenVDB.cmake         |  19 +-
- cmake/FindTBB.cmake             | 605 ++++++++++++++++++++--------------------
- openvdb/CMakeLists.txt          |  13 +-
- openvdb/Grid.cc                 |   3 +
- openvdb/PlatformConfig.h        |   9 +-
- openvdb/cmd/CMakeLists.txt      |   4 +-
- openvdb/unittest/CMakeLists.txt |   3 +-
- openvdb/unittest/TestFile.cc    |   2 +-
- 13 files changed, 336 insertions(+), 1213 deletions(-)
- delete mode 100644 cmake/FindBlosc.cmake
- delete mode 100644 cmake/FindIlmBase.cmake
- delete mode 100644 cmake/FindOpenEXR.cmake
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 580b353..6d364c1 100644
+index 580b353..fc2b130 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -267,12 +267,9 @@ endif()
+@@ -63,8 +63,9 @@
+ 
+ #]=======================================================================]
+ 
+-project(OpenVDB)
+ cmake_minimum_required(VERSION 3.3)
++project(OpenVDB)
++
+ # Monitoring <PackageName>_ROOT variables
+ if(POLICY CMP0048)
+   cmake_policy(SET CMP0048 NEW)
+@@ -267,12 +268,9 @@ endif()
  
  if(OPENVDB_INSTALL_CMAKE_MODULES)
    set(OPENVDB_CMAKE_MODULES
@@ -1778,6 +1764,3 @@ index df51830..0ab0c12 100644
          if (0 > blosc_compcode_to_compname(compcode, &compname)) continue;
          /// @todo This changes the compressor setting globally.
          if (blosc_set_compressor(compname) < 0) continue;
--- 
-2.16.2.windows.1
-
