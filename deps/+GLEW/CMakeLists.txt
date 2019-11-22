@@ -1,23 +1,7 @@
-include(ExternalProject)
-
-if (RP_PACKAGE STREQUAL "GLEW")
-  message(STATUS "GLEW Sourcedir: ${CMAKE_CURRENT_LIST_DIR}/glew")
-endif()
-
 require_dependency(OpenGL REQUIRED)
 
-Externalproject_Add( 
-  rp_GLEW
+rp_add_cmake_project(GLEW
   # GIT_REPOSITORY https://github.com/nigels-com/glew.git
   # GIT_TAG 3a8eff7 # 2.1.0
   SOURCE_DIR          ${CMAKE_CURRENT_LIST_DIR}/glew
-  INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
-  BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
-  CMAKE_ARGS
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-    -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-    -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-    -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS} 
-    -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-    -DCMAKE_DEBUG_POSTFIX=d
 )

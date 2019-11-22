@@ -1,5 +1,3 @@
-include(ExternalProject)
-
 if (NOT RP_wxWidgets_VERSION)
    set(RP_wxWidgets_VERSION 3.1.3) # should be the latest release
 endif()
@@ -24,19 +22,11 @@ require_dependency(ZLIB)
 require_dependency(EXPAT)
 
 # if (WIN32)
-    ExternalProject_Add(rp_wxWidgets
+    rp_add_cmake_project(wxWidgets
         GIT_REPOSITORY https://github.com/wxWidgets/wxWidgets.git #"https://github.com/prusa3d/wxWidgets"
         GIT_TAG ${_wx_git_tag}
-        INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
-        BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
         PATCH_COMMAND "${_patch_command}"
         CMAKE_ARGS
-            -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-            -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
-            -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS} 
-            -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE} 
-            -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-            -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
             -DwxBUILD_PRECOMP=ON
             ${_wx_toolkit}
             -DwxUSE_DETECT_SM=OFF
@@ -50,7 +40,6 @@ require_dependency(EXPAT)
             -DwxUSE_LIBJPEG=builtin
             -DwxUSE_LIBTIFF=builtin
             -DwxUSE_EXPAT=sys
-            -DCMAKE_DEBUG_POSTFIX=d
     )
 # else() # Temporary solution
 #     set (_wx_flags "")

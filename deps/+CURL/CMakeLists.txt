@@ -1,5 +1,3 @@
-include(ExternalProject)
-
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
   include(ProcessorCount)
   ProcessorCount(NPROC)
@@ -81,21 +79,12 @@ else()
   set(_curl_static ON)
 endif()
 
-Externalproject_Add( 
-  rp_CURL
+rp_add_cmake_project(CURL
   GIT_REPOSITORY      https://github.com/curl/curl.git
   GIT_TAG             curl-7_58_0
-  INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
-  BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
   PATCH_COMMAND       ${GIT_EXECUTABLE} checkout -f -- . && git clean -df && 
                       ${GIT_EXECUTABLE} apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/curl-mods.patch
-  CMAKE_ARGS         
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-    -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-    -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-    -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS} 
-    -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-    -DCMAKE_DEBUG_POSTFIX=d
+  CMAKE_ARGS
     -DBUILD_TESTING:BOOL=OFF
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON
     -DCURL_STATICLIB=${_curl_static}

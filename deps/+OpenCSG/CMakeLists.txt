@@ -1,18 +1,7 @@
-include(ExternalProject)
-
 require_dependency(GLEW VERSION 1.13.0 REQUIRED)
 
-ExternalProject_Add(rp_OpenCSG
+rp_add_cmake_project(OpenCSG
     GIT_REPOSITORY https://github.com/floriankirsch/OpenCSG.git
     GIT_TAG 83e274457b46c9ad11a4ee599203250b1618f3b9 #v1.4.2
-    INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
-    BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
-    CMAKE_ARGS         
-      -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-      -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-      -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-      -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS} 
-      -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-      -DCMAKE_DEBUG_POSTFIX=d
     PATCH_COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in ./CMakeLists.txt
 )
