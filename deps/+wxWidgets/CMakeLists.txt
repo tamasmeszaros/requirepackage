@@ -34,7 +34,7 @@ if (WIN32)
             -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE} 
             -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
             -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-            -DwxBUILD_PRECOMP=OFF
+            -DwxBUILD_PRECOMP=ON
             ${_wx_toolkit}
             -DwxUSE_DETECT_SM=OFF
             -DwxUSE_UNICODE=ON

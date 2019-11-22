@@ -1,9 +1,8 @@
 include(ExternalProject)
 ExternalProject_Add(
     rp_GTest
-    EXCLUDE_FROM_ALL    ON
     GIT_REPOSITORY      https://github.com/google/googletest.git
-    GIT_TAG             release-1.8.0
+    GIT_TAG             release-1.10.0
     INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
     BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
     CMAKE_ARGS         
