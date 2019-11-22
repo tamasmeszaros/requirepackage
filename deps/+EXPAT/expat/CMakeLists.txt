@@ -10,12 +10,7 @@ add_library(expat
 
 target_include_directories(expat PRIVATE ${PROJECT_SOURCE_DIR})
 
-install(TARGETS expat
-    RUNTIME DESTINATION bin 
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    INCLUDES DESTINATION include
-)
+include(GNUInstallDirs)
 
 install( 
     FILES
@@ -23,7 +18,7 @@ install(
         ${PROJECT_SOURCE_DIR}/expat_config.h
         ${PROJECT_SOURCE_DIR}/expat_external.h
     DESTINATION
-        "include"
+        ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 add_library(EXPAT INTERFACE)
@@ -39,16 +34,17 @@ write_basic_package_version_file(
 
 install(TARGETS expat EXPAT
   EXPORT ${PROJECT_NAME}Targets
-  RUNTIME DESTINATION bin 
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  INCLUDES DESTINATION include)
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} 
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 export(EXPORT ${PROJECT_NAME}Targets 
        FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake" 
        NAMESPACE ${PROJECT_NAME}:: )
 
-set(ConfigPackageLocation lib/cmake/${PROJECT_NAME})
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 install(EXPORT ${PROJECT_NAME}Targets
   FILE

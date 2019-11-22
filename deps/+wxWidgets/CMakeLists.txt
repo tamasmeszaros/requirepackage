@@ -1,7 +1,7 @@
 include(ExternalProject)
 
 if (NOT RP_wxWidgets_VERSION)
-   set(RP_wxWidgets_VERSION 3.1.2) # should be the latest release
+   set(RP_wxWidgets_VERSION 3.1.3) # should be the latest release
 endif()
 
 set(_wx_git_tag v${RP_wxWidgets_VERSION})
@@ -23,9 +23,9 @@ endif()
 require_dependency(ZLIB)
 require_dependency(EXPAT)
 
-if (WIN32)
+# if (WIN32)
     ExternalProject_Add(rp_wxWidgets
-        GIT_REPOSITORY "https://github.com/prusa3d/wxWidgets"
+        GIT_REPOSITORY https://github.com/wxWidgets/wxWidgets.git #"https://github.com/prusa3d/wxWidgets"
         GIT_TAG ${_wx_git_tag}
         INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
         BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
@@ -52,45 +52,45 @@ if (WIN32)
             -DwxUSE_EXPAT=sys
             -DCMAKE_DEBUG_POSTFIX=d
     )
-else() # Temporary solution
-    set (_wx_flags "")
-    if (NOT BUILD_SHARED_LIBS)
-        set(_wx_flags --disable-shared )
-    endif ()
-    if (APPLE)
-        set(_wx_toolkit --with-osx_cocoa --with-macosx-sdk=${CMAKE_OSX_SYSROOT} 
-                        "--with-macosx-version-min=${DEP_OSX_TARGET}")
-    else()
-        set(_wx_toolkit --with-gtk=2)
-    endif()
+# else() # Temporary solution
+#     set (_wx_flags "")
+#     if (NOT BUILD_SHARED_LIBS)
+#         set(_wx_flags --disable-shared )
+#     endif ()
+#     if (APPLE)
+#         set(_wx_toolkit --with-osx_cocoa --with-macosx-sdk=${CMAKE_OSX_SYSROOT} 
+#                         "--with-macosx-version-min=${DEP_OSX_TARGET}")
+#     else()
+#         set(_wx_toolkit --with-gtk=2)
+#     endif()
 
-    include(ProcessorCount)
-    ProcessorCount(NPROC)
+#     include(ProcessorCount)
+#     ProcessorCount(NPROC)
     
-    ExternalProject_Add(rp_wxWidgets
-        GIT_REPOSITORY "https://github.com/prusa3d/wxWidgets"
-        GIT_TAG ${_wx_git_tag}
-        BUILD_IN_SOURCE ON
-        CONFIGURE_COMMAND ./configure
-            "--prefix=${CMAKE_INSTALL_PREFIX}"
-            ${_wx_flags}
-            ${_wx_toolkit}
-            --with-opengl
-            --enable-unicode
-            --enable-graphics_ctx
-            --with-regex=builtin
-            --with-libpng=builtin
-            --with-libxpm=builtin
-            --with-libjpeg=builtin
-            --with-libtiff=builtin
-            --with-zlib=sys
-            --with-expat=sys
-            --disable-precomp-headers
-            --enable-debug_info
-            --enable-debug_gdb
-            --disable-debug
-            --disable-debug_flag
-        BUILD_COMMAND make "-j${NPROC}" && make -C locale allmo
-        INSTALL_COMMAND make install
-    )
-endif()
+#     ExternalProject_Add(rp_wxWidgets
+#         GIT_REPOSITORY "https://github.com/prusa3d/wxWidgets"
+#         GIT_TAG ${_wx_git_tag}
+#         BUILD_IN_SOURCE ON
+#         CONFIGURE_COMMAND ./configure
+#             "--prefix=${CMAKE_INSTALL_PREFIX}"
+#             ${_wx_flags}
+#             ${_wx_toolkit}
+#             --with-opengl
+#             --enable-unicode
+#             --enable-graphics_ctx
+#             --with-regex=builtin
+#             --with-libpng=builtin
+#             --with-libxpm=builtin
+#             --with-libjpeg=builtin
+#             --with-libtiff=builtin
+#             --with-zlib=sys
+#             --with-expat=sys
+#             --disable-precomp-headers
+#             --enable-debug_info
+#             --enable-debug_gdb
+#             --disable-debug
+#             --disable-debug_flag
+#         BUILD_COMMAND make "-j${NPROC}" && make -C locale allmo
+#         INSTALL_COMMAND make install
+#     )
+# endif()
