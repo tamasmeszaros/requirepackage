@@ -7,12 +7,7 @@ add_library(glew src/glew.c)
 target_include_directories(glew PRIVATE include/)
 target_link_libraries(glew PUBLIC OpenGL::GL)
 
-install(TARGETS glew
-    RUNTIME DESTINATION bin 
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    INCLUDES DESTINATION include
-)
+include(GNUInstallDirs)
 
 install( 
     FILES
@@ -20,7 +15,7 @@ install(
         ${PROJECT_SOURCE_DIR}/include/GL/wglew.h
         ${PROJECT_SOURCE_DIR}/include/GL/glxew.h
     DESTINATION
-        "include/GL"
+        ${CMAKE_INSTALL_INCLUDEDIR}/GL
 )
 
 add_library(GLEW INTERFACE)
@@ -35,17 +30,18 @@ write_basic_package_version_file(
 )
 
 install(TARGETS glew GLEW
-  EXPORT ${PROJECT_NAME}Targets
-  RUNTIME DESTINATION bin 
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  INCLUDES DESTINATION include)
+    EXPORT ${PROJECT_NAME}Targets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} 
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 export(EXPORT ${PROJECT_NAME}Targets 
        FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake" 
        NAMESPACE ${PROJECT_NAME}:: )
 
-set(ConfigPackageLocation lib/cmake/${PROJECT_NAME})
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 install(EXPORT ${PROJECT_NAME}Targets
   FILE
