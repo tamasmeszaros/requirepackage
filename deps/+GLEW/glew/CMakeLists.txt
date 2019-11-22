@@ -5,7 +5,7 @@ find_package(OpenGL REQUIRED)
 
 add_library(glew src/glew.c)
 target_include_directories(glew PRIVATE include/)
-target_link_libraries(glew PRIVATE OpenGL::GL)
+target_link_libraries(glew PUBLIC OpenGL::GL)
 
 install(TARGETS glew
     RUNTIME DESTINATION bin 

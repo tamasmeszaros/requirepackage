@@ -6,6 +6,7 @@ if (NOT BUILD_SHARED_LIBS)
   set(GLEW_USE_STATIC_LIBS ON)
 endif ()
 
+find_package(OpenGL REQUIRED)
 find_package(GLEW 1.13.0 REQUIRED)
 
 set(_srcfiles 
@@ -49,7 +50,7 @@ set(_srcfiles
 add_library(opencsg ${_srcfiles})
 target_include_directories(opencsg PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
 target_include_directories(opencsg PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>)
-target_link_libraries(opencsg PRIVATE GLEW::GLEW)
+target_link_libraries(opencsg PRIVATE GLEW::GLEW OpenGL::GL)
 
 include(CMakePackageConfigHelpers)
 
