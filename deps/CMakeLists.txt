@@ -25,16 +25,33 @@ endif()
 # Otherwise it was called by another means as a normal subdirectory or parent project
 
 set(RP_ALL_TARGETS "")
+set(RP_PACKAGE_SETUP_SCRIPT "" CACHE STRING "Specify custom package setup script.")
 if (NOT AS_RP_PROCESS)
   # Instruction: append package names to RP_ALL_TARGETS to be included in ALL
-  include(PackageSetup.cmake)
+
+  if (NOT RP_PACKAGE_SETUP_SCRIPT)
+    include(PackageSetup.cmake)
+  else ()
+    include(${RP_PACKAGE_SETUP_SCRIPT})
+  endif ()
+
 endif()
+
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build the packages as shared libraries.")
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../cmake-modules)
 
 get_property(_is_multi GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 
 function(require_dependency dep_name )
 
   cmake_parse_arguments(RD_ARGS "REQUIRED;QUIET" "VERSION" "COMPONENTS" ${ARGN})
+
+  list(FIND RP_PACKAGES ${dep_name} _idx)
+  set(_found_target true)
+  if (_idx LESS 0)
+    set(_found_target false)
+  endif ()
   
   # set(dep_ver ${ARGV1})
 
@@ -43,10 +60,15 @@ function(require_dependency dep_name )
 
   # Ignore REQUIRED, forward QUIET of RP
 
-  if(NOT RP_FORCE_DOWNLOADING OR NOT TARGET rp_${dep_name})
+  set(target_ off)
+  if (TARGET rp_${dep_name})
+    set(target_ on)
+  endif()
+
+  if(NOT _found_target)
     find_package(${dep_name} ${dep_ver} QUIET ${RD_ARGS_UNPARSED_ARGUMENTS})
     
-    if(NOT RP_${dep_name}_FOUND AND ${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
+    if(${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
       message(STATUS "Linking SYSTEM package ${dep_name} to ${PACKAGE} as a dependency.")
     endif()
 
@@ -58,8 +80,7 @@ function(require_dependency dep_name )
   endif()
 
   if(NOT ${dep_name}_FOUND)
-    list(FIND RP_PACKAGES ${dep_name} _idx)
-    if (_idx LESS 0)
+    if (NOT _found_target)
       set(_errstr "Package ${dep_name} cannot be found.")
       if (RP_FIND_REQUIRED AND RD_ARGS_REQUIRED)
         message(FATAL_ERROR ${_errstr})
@@ -72,6 +93,11 @@ function(require_dependency dep_name )
       list(APPEND ${PACKAGE}_DEPENDS rp_${dep_name})
       list(REMOVE_DUPLICATES ${PACKAGE}_DEPENDS)
       set(${PACKAGE}_DEPENDS "${${PACKAGE}_DEPENDS}" CACHE INTERNAL "")
+
+      if(NOT RP_${dep_name}_FOUND AND NOT ${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
+        message(STATUS "Linking package ${dep_name} to ${PACKAGE} as a dependency.")
+      endif()
+
     endif()
   endif()
 endfunction()
@@ -149,6 +175,11 @@ endforeach()
 
 foreach(PACKAGE IN ITEMS ${RP_PACKAGES})
   if(${PACKAGE}_DEPENDS)
+    foreach(tgt ${${PACKAGE}_DEPENDS})
+      if (NOT TARGET ${tgt})
+        message(FATAL_ERROR "Required package target ${tgt} is not defined!")
+      endif ()
+    endforeach()
     add_dependencies(rp_${PACKAGE} ${${PACKAGE}_DEPENDS})
   endif()
 endforeach()

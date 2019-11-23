@@ -35,7 +35,7 @@ require_dependency(EXPAT)
             -DwxUSE_LIBPNG=builtin
             -DwxUSE_ZLIB=sys
             -DwxUSE_REGEX=builtin
-            -DwxUSE_LIBPNG=builtin
+            -DwxUSE_LIBPNG=sys
             -DwxUSE_LIBXPM=builtin
             -DwxUSE_LIBJPEG=builtin
             -DwxUSE_LIBTIFF=builtin
