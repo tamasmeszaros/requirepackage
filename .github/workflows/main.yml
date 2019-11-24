@@ -13,19 +13,20 @@ jobs:
       
     steps:
       - uses: actions/checkout@v1
-      - name: Build the example
-        run: |
-          source /opt/rh/devtoolset-7/enable
-          mkdir -p build-centos6 
-          cd build-centos6
-          cmake .. -DRP_ENABLE_DOWNLOADING=ON
+      # - name: Build the example
+      #   run: |
+      #     source /opt/rh/devtoolset-7/enable
+      #     mkdir -p build-centos6 
+      #     cd build-centos6
+      #     cmake .. -DRP_ENABLE_DOWNLOADING=ON
       - name: Build all packages
         run: |
           source /opt/rh/devtoolset-7/enable
           mkdir -p build-all-centos6
           cd build-all-centos6 
           cmake ../deps -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/
-          cmake --build .
+          cmake --build . --target rp_TIFF
+          cmake --build . --target rp_wxWidgets
       # - name: Create archive of dependencies
       #   run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
       # - uses: actions/upload-artifact@v1
@@ -41,10 +42,15 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install opengl
       run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev ninja-build
-    - name: Build the example
-      run: mkdir -p build-gcc && cd build-gcc && cmake .. -DRP_ENABLE_DOWNLOADING=ON
+    # - name: Build the example
+    #   run: mkdir -p build-gcc && cd build-gcc && cmake .. -DRP_ENABLE_DOWNLOADING=ON
     - name: Build all packages
-      run: mkdir -p build-all-gcc && cd build-all-gcc && cmake ../deps -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build .
+      run: |
+        mkdir -p build-all-gcc 
+        cd build-all-gcc
+        cmake ../deps -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
+        cmake --build . --target rp_TIFF
+        cmake --build . --target rp_wxWidgets
 
   build-mac:
 
@@ -52,8 +58,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Build the example
-      run: mkdir -p build-mac && cd build-mac && cmake .. -DRP_ENABLE_DOWNLOADING=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
+    # - name: Build the example
+    #   run: mkdir -p build-mac && cd build-mac && cmake .. -DRP_ENABLE_DOWNLOADING=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
     - name: Build all packages
       run: |
         export PATH=$(brew --prefix gettext)/bin:$PATH
@@ -61,7 +67,8 @@ jobs:
         mkdir -p build-all-mac 
         cd build-all-mac 
         cmake ../deps -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release 
-        cmake --build . -- -j
+        cmake --build . --target rp_TIFF -- -j
+        cmake --build . --target rp_wxWidgets -- -j
 
   build-msvc:
 
@@ -69,18 +76,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Build the example
-      run: |
-        mkdir build-win 
-        cd build-win 
-        cmake .. -DRP_ENABLE_DOWNLOADING=ON
+    # - name: Build the example
+    #   run: |
+    #     mkdir build-win 
+    #     cd build-win 
+    #     cmake .. -DRP_ENABLE_DOWNLOADING=ON
     - name: Build all packages
       run: |
         mkdir build-all-win
         cd build-all-win
         cmake ../deps -DBUILD_SHARED_LIBS=OFF
-        cmake --build . --config Release -- /m
-        cmake --build . --config Debug -- /m
+        cmake --build . --target rp_TIFF --config Release -- /m
+        cmake --build . --target rp_TIFF --config Debug -- /m
+        cmake --build . --target rp_wxWidgets --config Release -- /m
+        cmake --build . --target rp_wxWidgets --config Debug -- /m
     #- uses: actions/upload-artifact@v1
     #  with:
     #    name: windows-static-64bit

@@ -20,6 +20,8 @@ endif()
 
 require_dependency(ZLIB)
 require_dependency(EXPAT)
+require_dependency(PNG)
+require_dependency(TIFF)
 
 # if (WIN32)
     rp_add_cmake_project(wxWidgets
@@ -38,7 +40,7 @@ require_dependency(EXPAT)
             -DwxUSE_LIBPNG=sys
             -DwxUSE_LIBXPM=builtin
             -DwxUSE_LIBJPEG=builtin
-            -DwxUSE_LIBTIFF=builtin
+            -DwxUSE_LIBTIFF=sys
             -DwxUSE_EXPAT=sys
     )
 # else() # Temporary solution
