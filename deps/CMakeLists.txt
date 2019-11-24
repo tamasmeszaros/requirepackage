@@ -142,7 +142,7 @@ function(rp_add_cmake_project projectname)
   else ()
     set(_configs_line -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE})
   endif ()
-
+  
   ExternalProject_Add(
       rp_${projectname}
       INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
@@ -154,6 +154,7 @@ function(rp_add_cmake_project projectname)
           -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
           -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
           -DCMAKE_DEBUG_POSTFIX:STRING=d
+          -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
           "${_configs_line}"
           ${P_ARGS_CMAKE_ARGS}
      ${P_ARGS_UNPARSED_ARGUMENTS}

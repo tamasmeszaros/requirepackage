@@ -25,14 +25,13 @@ jobs:
           mkdir -p build-all-centos6
           cd build-all-centos6 
           cmake ../deps -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/
-          cmake --build . --target rp_TIFF
-          cmake --build . --target rp_wxWidgets
-      # - name: Create archive of dependencies
-      #   run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
-      # - uses: actions/upload-artifact@v1
-      #   with:
-      #     name: deps-linux-static-64bit
-      #     path: deps-linux-static-64bit.tar.gz
+          cmake --build .
+      - name: Create archive of dependencies
+        run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
+      - uses: actions/upload-artifact@v1
+        with:
+          name: deps-linux-static-64bit
+          path: deps-linux-static-64bit.tar.gz
 
   build-gcc:
 
@@ -49,8 +48,7 @@ jobs:
         mkdir -p build-all-gcc 
         cd build-all-gcc
         cmake ../deps -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
-        cmake --build . --target rp_TIFF
-        cmake --build . --target rp_wxWidgets
+        cmake --build .
 
   build-mac:
 
@@ -67,8 +65,7 @@ jobs:
         mkdir -p build-all-mac 
         cd build-all-mac 
         cmake ../deps -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release 
-        cmake --build . --target rp_TIFF -- -j
-        cmake --build . --target rp_wxWidgets -- -j
+        cmake --build . -- -j
 
   build-msvc:
 
@@ -86,11 +83,9 @@ jobs:
         mkdir build-all-win
         cd build-all-win
         cmake ../deps -DBUILD_SHARED_LIBS=OFF
-        cmake --build . --target rp_TIFF --config Release -- /m
-        cmake --build . --target rp_TIFF --config Debug -- /m
-        cmake --build . --target rp_wxWidgets --config Release -- /m
-        cmake --build . --target rp_wxWidgets --config Debug -- /m
-    #- uses: actions/upload-artifact@v1
-    #  with:
-    #    name: windows-static-64bit
-    #    path: build-all-win/destdir/usr/local
+        cmake --build . --config Release -- /m
+        cmake --build . --config Debug -- /m
+    - uses: actions/upload-artifact@v1
+      with:
+        name: windows-static-64bit
+        path: build-all-win/destdir/usr/local
