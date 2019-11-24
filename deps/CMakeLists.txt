@@ -27,8 +27,10 @@ endif()
 set(RP_ALL_TARGETS "")
 set(RP_PACKAGE_SETUP_SCRIPT "" CACHE STRING "Specify custom package setup script.")
 if (NOT AS_RP_PROCESS)
-  # Instruction: append package names to RP_ALL_TARGETS to be included in ALL
 
+  set (RP_FORCE_DOWNLOADING OFF CACHE BOOL "Force all packages to be built even if installed in system.")
+
+  # Instruction: append package names to RP_ALL_TARGETS to be included in ALL
   if (NOT RP_PACKAGE_SETUP_SCRIPT)
     include(PackageSetup.cmake)
   else ()
@@ -44,6 +46,32 @@ endif ()
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build the packages as shared libraries.")
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../cmake-modules)
+
+message(STATUS "Package summary:")
+
+foreach(p ${RP_ALL_TARGETS})
+  set(RP_${p}_FOUND FALSE CACHE INTERNAL "")
+  if (RP_FORCE_DOWNLOADING)
+    message(STATUS "Bundling: ${p}")
+  endif()
+endforeach()
+
+# Filter out packages that are present in system
+if (NOT RP_FORCE_DOWNLOADING AND NOT AS_RP_PROCESS)
+  set(_packages ${RP_ALL_TARGETS})
+  foreach(p ${RP_ALL_TARGETS})
+    find_package(${p} ${RP_${p}_VERSION} QUIET COMPONENTS ${RP_${p}_COMPONENTS})
+    if (${p}_FOUND)
+      list(REMOVE_ITEM _packages ${p})
+      set (RP_${p}_FOUND TRUE CACHE INTERNAL "")
+      message(STATUS "System:   ${p}")
+    else ()
+      message(STATUS "Building: ${p}")
+    endif ()
+  endforeach()
+  set (RP_ALL_TARGETS ${_packages})
+  unset(_packages)
+endif ()
 
 get_property(_is_multi GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 
@@ -69,41 +97,34 @@ function(require_dependency dep_name )
     set(target_ on)
   endif()
 
-  if(NOT _found_target)
+  if(NOT RP_FORCE_DOWNLOADING OR NOT _found_target)
     find_package(${dep_name} ${dep_ver} QUIET ${RD_ARGS_UNPARSED_ARGUMENTS})
-    
-    if(${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
+    if (${dep_name}_FOUND)
+      set(RP_${dep_name}_FOUND TRUE CACHE INTERNAL "")
+    endif()
+
+    if(RP_${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
       message(STATUS "Linking SYSTEM package ${dep_name} to ${PACKAGE} as a dependency.")
     endif()
 
-    if(NOT RP_${dep_name}_FOUND AND NOT ${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
-      message(STATUS "Linking package ${dep_name} to ${PACKAGE} as a dependency.")
-    endif()
+    # if(NOT RP_${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
+    #   message(STATUS "Linking package ${dep_name} to ${PACKAGE} as a dependency.")
+    # endif()
 
-    set(RP_${dep_name}_FOUND TRUE CACHE INTERNAL "")
   endif()
 
-  if(NOT ${dep_name}_FOUND)
-    if (NOT _found_target)
-      set(_errstr "Package ${dep_name} cannot be found.")
-      if (RP_FIND_REQUIRED AND RD_ARGS_REQUIRED)
-        message(FATAL_ERROR ${_errstr})
-      endif()
-
-      if (NOT RP_FIND_QUIETLY AND NOT RD_ARGS_QUIET)
-        message(WARNING ${_errstr})
-      endif()
-    else()
+  if(NOT RP_${dep_name}_FOUND)
+    if (_found_target)
       list(APPEND ${PACKAGE}_DEPENDS rp_${dep_name})
       list(REMOVE_DUPLICATES ${PACKAGE}_DEPENDS)
       set(${PACKAGE}_DEPENDS "${${PACKAGE}_DEPENDS}" CACHE INTERNAL "")
 
-      if(NOT RP_${dep_name}_FOUND AND NOT ${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
+      if(NOT RP_${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
         message(STATUS "Linking package ${dep_name} to ${PACKAGE} as a dependency.")
       endif()
-
     endif()
   endif()
+
 endfunction()
 
 include(ExternalProject)

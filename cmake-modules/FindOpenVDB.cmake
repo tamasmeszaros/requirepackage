@@ -295,7 +295,9 @@ if(NOT IlmBase_FOUND)
   pkg_check_modules(IlmBase QUIET IlmBase)
 endif()
 if (IlmBase_FOUND AND NOT TARGET IlmBase::Half)
-  message(STATUS "Falling back to IlmBase found by pkg-config...")
+  if (NOT OpenVDB_FIND_QUIETLY)
+    message(STATUS "Falling back to IlmBase found by pkg-config...")
+  endif ()
 
   find_library(IlmHalf_LIBRARY NAMES Half)
   if(IlmHalf_LIBRARY-NOTFOUND OR NOT IlmBase_INCLUDE_DIRS)
@@ -324,14 +326,18 @@ set(_EXCLUDE_SYSTEM_PREREQUISITES 1)
 set(_RECURSE_PREREQUISITES 0)
 set(_OPENVDB_PREREQUISITE_LIST)
 
+if (NOT OpenVDB_openvdb_LIBRARY)
+  just_fail("Cannot find OpenVDB library!")
+endif ()
+
 if(NOT OPENVDB_USE_STATIC_LIBS)
-get_prerequisites(${OpenVDB_openvdb_LIBRARY}
-  _OPENVDB_PREREQUISITE_LIST
-  ${_EXCLUDE_SYSTEM_PREREQUISITES}
-  ${_RECURSE_PREREQUISITES}
-  ""
-  "${SYSTEM_LIBRARY_PATHS}"
-)
+  get_prerequisites(${OpenVDB_openvdb_LIBRARY}
+    _OPENVDB_PREREQUISITE_LIST
+    ${_EXCLUDE_SYSTEM_PREREQUISITES}
+    ${_RECURSE_PREREQUISITES}
+    ""
+    "${SYSTEM_LIBRARY_PATHS}"
+  )
 endif()
 
 unset(_EXCLUDE_SYSTEM_PREREQUISITES)
@@ -483,25 +489,27 @@ foreach(LIB ${OpenVDB_LIB_COMPONENTS})
 endforeach()
 list(REMOVE_DUPLICATES OpenVDB_LIBRARY_DIRS)
 
-foreach(COMPONENT ${OpenVDB_FIND_COMPONENTS})
-  if(NOT TARGET OpenVDB::${COMPONENT})
-    add_library(OpenVDB::${COMPONENT} UNKNOWN IMPORTED)
-    set_target_properties(OpenVDB::${COMPONENT} PROPERTIES
-      IMPORTED_LOCATION "${OpenVDB_${COMPONENT}_LIBRARY}"
-      INTERFACE_COMPILE_OPTIONS "${OpenVDB_DEFINITIONS}"
-      INTERFACE_INCLUDE_DIRECTORIES "${OpenVDB_INCLUDE_DIR}"
-      IMPORTED_LINK_DEPENDENT_LIBRARIES "${_OPENVDB_HIDDEN_DEPENDENCIES}" # non visible deps
-      INTERFACE_LINK_LIBRARIES "${_OPENVDB_VISIBLE_DEPENDENCIES}" # visible deps (headers)
-      INTERFACE_COMPILE_FEATURES cxx_std_11
-   )
-
-   if (OPENVDB_USE_STATIC_LIBS)
-    set_target_properties(OpenVDB::${COMPONENT} PROPERTIES
-      INTERFACE_COMPILE_DEFINITIONS "OPENVDB_STATICLIB;OPENVDB_OPENEXR_STATICLIB"
+if (OpenVDB_FOUND)
+  foreach(COMPONENT ${OpenVDB_FIND_COMPONENTS})
+    if(NOT TARGET OpenVDB::${COMPONENT})
+      add_library(OpenVDB::${COMPONENT} UNKNOWN IMPORTED)
+      set_target_properties(OpenVDB::${COMPONENT} PROPERTIES
+        IMPORTED_LOCATION "${OpenVDB_${COMPONENT}_LIBRARY}"
+        INTERFACE_COMPILE_OPTIONS "${OpenVDB_DEFINITIONS}"
+        INTERFACE_INCLUDE_DIRECTORIES "${OpenVDB_INCLUDE_DIR}"
+        IMPORTED_LINK_DEPENDENT_LIBRARIES "${_OPENVDB_HIDDEN_DEPENDENCIES}" # non visible deps
+        INTERFACE_LINK_LIBRARIES "${_OPENVDB_VISIBLE_DEPENDENCIES}" # visible deps (headers)
+        INTERFACE_COMPILE_FEATURES cxx_std_11
     )
-   endif()
-  endif()
-endforeach()
+
+    if (OPENVDB_USE_STATIC_LIBS)
+      set_target_properties(OpenVDB::${COMPONENT} PROPERTIES
+        INTERFACE_COMPILE_DEFINITIONS "OPENVDB_STATICLIB;OPENVDB_OPENEXR_STATICLIB"
+      )
+    endif()
+    endif()
+  endforeach()
+endif ()
 
 if(OpenVDB_FOUND AND NOT OpenVDB_FIND_QUIETLY)
   message(STATUS "OpenVDB libraries: ${OpenVDB_LIBRARIES}")

@@ -6,6 +6,8 @@ if (NOT RP_Boost_COMPONENTS)
     set(RP_Boost_COMPONENTS system iostreams filesystem thread log locale regex)
 endif ()
 
+set (RP_OpenVDB_COMPONENTS openvdb)
+
 # set(RP_FORCE_DOWNLOADING ON CACHE BOOL "")
 #set(RP_FIND_QUIETLY ON CACHE BOOL "")
 
