@@ -26,6 +26,7 @@ endif()
 
 set(RP_ALL_TARGETS "")
 set(RP_PACKAGE_SETUP_SCRIPT "" CACHE STRING "Specify custom package setup script.")
+set(RP_PACKAGE_MOD_SCRIPT ""   CACHE STRING "Specify a script where package download targets can be tweaked.")
 if (NOT AS_RP_PROCESS)
 
   set (RP_FORCE_DOWNLOADING OFF CACHE BOOL "Force all packages to be built even if installed in system.")
@@ -106,11 +107,6 @@ function(require_dependency dep_name )
     if(RP_${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
       message(STATUS "Linking SYSTEM package ${dep_name} to ${PACKAGE} as a dependency.")
     endif()
-
-    # if(NOT RP_${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
-    #   message(STATUS "Linking package ${dep_name} to ${PACKAGE} as a dependency.")
-    # endif()
-
   endif()
 
   if(NOT RP_${dep_name}_FOUND)
@@ -215,6 +211,10 @@ if (NOT AS_RP_PROCESS)
     add_dependencies(rp rp_${_pkg})
   endforeach()
 endif()
+
+if (RP_PACKAGE_MOD_SCRIPT)
+  include(${RP_PACKAGE_MOD_SCRIPT})
+endif ()
 
 unset(RP_PACKAGE)
 unset(RP_${RP_PACKAGE}_COMPONENTS)

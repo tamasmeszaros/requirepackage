@@ -13,7 +13,7 @@ option(RP_ENABLE_DOWNLOADING "Enable downloading of bundled packages if not foun
 include(CMakeDependentOption)
 cmake_dependent_option(RP_FORCE_DOWNLOADING "Force downloading packages even if found." OFF "RP_ENABLE_DOWNLOADING" OFF)
 
-set(RP_REPOSITORY_DIR ${PROJECT_SOURCE_DIR}/deps CACHE STRING "Package repository location")
+set(RP_REPOSITORY_DIR ${CMAKE_CURRENT_LIST_DIR}/../deps CACHE STRING "Package repository location")
 set(RP_BUILD_PATH ${PROJECT_BINARY_DIR}/rp_packages_build CACHE STRING "Binary dir for downloaded package builds")
 
 mark_as_advanced(RP_BUILD_PATH)
