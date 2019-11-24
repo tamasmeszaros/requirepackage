@@ -1,0 +1,31 @@
+name: CI-Centos6
+
+on: [push]
+
+jobs:
+
+  buid-gcc-centos6:
+    runs-on: ubuntu-latest
+    container:
+      image:  meszarosq/centos6-devtoolset7:latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build the example
+        run: |
+          source /opt/rh/devtoolset-7/enable
+          mkdir -p build-centos6 
+          cd build-centos6
+          cmake .. -DRP_ENABLE_DOWNLOADING=ON
+      - name: Build all packages
+        run: |
+          source /opt/rh/devtoolset-7/enable
+          mkdir -p build-all-centos6
+          cd build-all-centos6 
+          cmake ../deps -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/
+          cmake --build .
+      - name: Create archive of dependencies
+        run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
+      - uses: actions/upload-artifact@v1
+        with:
+          name: deps-linux-static-64bit
+          path: deps-linux-static-64bit.tar.gz

@@ -1,28 +1,8 @@
-name: CI
+name: CI-all-platforms
 
 on: [push]
 
 jobs:
-
-  buid-gcc-centos6:
-    runs-on: ubuntu-latest
-    container:
-      image:  meszarosq/centos6-devtoolset7:latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Build the example
-        run: |
-          source /opt/rh/devtoolset-7/enable
-          mkdir -p build-centos6 
-          cd build-centos6
-          cmake .. -DRP_ENABLE_DOWNLOADING=ON
-      - name: Build all packages
-        run: |
-          source /opt/rh/devtoolset-7/enable
-          mkdir -p build-all-centos6
-          cd build-all-centos6 
-          cmake ../deps -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
-          cmake --build .
 
   build-gcc:
 
@@ -52,7 +32,7 @@ jobs:
         mkdir -p build-all-mac 
         cd build-all-mac 
         cmake ../deps -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release 
-        cmake --build . -- -j4
+        cmake --build . -- -j
 
   build-msvc:
 
@@ -71,3 +51,8 @@ jobs:
         cd build-all-win
         cmake ../deps -DBUILD_SHARED_LIBS=OFF
         cmake --build . --config Release -- /m
+        cmake --build . --config Debug -- /m
+    - uses: actions/upload-artifact@v1
+      with:
+        name: windows-static-64bit
+        path: build-all-win/destdir/usr/local
