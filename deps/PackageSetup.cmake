@@ -7,7 +7,7 @@ if (NOT RP_Boost_COMPONENTS)
 endif ()
 
 set (RP_OpenVDB_COMPONENTS openvdb)
-set (RP_wxWidgets_VERSION 3.1.1)
+set (RP_wxWidgets_VERSION 3.1.3)
 
 # set(RP_FORCE_DOWNLOADING ON CACHE BOOL "")
 #set(RP_FIND_QUIETLY ON CACHE BOOL "")
