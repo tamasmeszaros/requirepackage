@@ -189,7 +189,7 @@ function(download_package)
 
         # Can proceed with the build step
         execute_process(
-            COMMAND ${CMAKE_COMMAND} --build . --target rp_${RP_ARGS_PACKAGE} --config ${_conf} --clean-first
+            COMMAND ${CMAKE_COMMAND} --build . --target rp_${RP_ARGS_PACKAGE} --config ${_conf}
             RESULT_VARIABLE BUILD_STEP_RESULT
             #OUTPUT_VARIABLE BUILD_STEP_OUTP
             ERROR_VARIABLE  BUILD_STEP_OUTP
