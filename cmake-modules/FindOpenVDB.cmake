@@ -330,14 +330,17 @@ if (NOT OpenVDB_openvdb_LIBRARY)
   just_fail("Cannot find OpenVDB library!")
 endif ()
 
-if(NOT OPENVDB_USE_STATIC_LIBS)
-  get_prerequisites(${OpenVDB_openvdb_LIBRARY}
-    _OPENVDB_PREREQUISITE_LIST
-    ${_EXCLUDE_SYSTEM_PREREQUISITES}
-    ${_RECURSE_PREREQUISITES}
-    ""
-    "${SYSTEM_LIBRARY_PATHS}"
-  )
+if(OpenVDB_openvdb_LIBRARY)
+  get_filename_component(_ext ${OpenVDB_openvdb_LIBRARY} EXT)
+  if (_ext STREQUAL so OR _ext STREQUAL dll)
+      get_prerequisites(${OpenVDB_openvdb_LIBRARY}
+        _OPENVDB_PREREQUISITE_LIST
+        ${_EXCLUDE_SYSTEM_PREREQUISITES}
+        ${_RECURSE_PREREQUISITES}
+        ""
+        "${SYSTEM_LIBRARY_PATHS}"
+      )
+  endif ()
 endif()
 
 unset(_EXCLUDE_SYSTEM_PREREQUISITES)

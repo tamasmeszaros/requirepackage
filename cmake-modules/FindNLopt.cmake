@@ -109,9 +109,11 @@ mark_as_advanced(
 
 # report result
 if(NLopt_FOUND)
-	message(STATUS "Found NLopt in '${NLopt_DIR}'.")
-	message(STATUS "Using NLopt include directory '${NLopt_INCLUDE_DIR}'.")
-	message(STATUS "Using NLopt library '${NLopt_LIBS}'.")
+	if (NOT NLopt_FIND_QUIETLY)
+		message(STATUS "Found NLopt in '${NLopt_DIR}'.")
+		message(STATUS "Using NLopt include directory '${NLopt_INCLUDE_DIR}'.")
+		message(STATUS "Using NLopt library '${NLopt_LIBS}'.")
+	endif ()
 	add_library(NLopt::nlopt INTERFACE IMPORTED)
 	set_target_properties(NLopt::nlopt PROPERTIES INTERFACE_LINK_LIBRARIES ${NLopt_LIBS})
 	set_target_properties(NLopt::nlopt PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${NLopt_INCLUDE_DIR})

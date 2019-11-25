@@ -13,12 +13,12 @@ jobs:
       
     steps:
       - uses: actions/checkout@v1
-      # - name: Build the example
-      #   run: |
-      #     source /opt/rh/devtoolset-7/enable
-      #     mkdir -p build-centos6 
-      #     cd build-centos6
-      #     cmake ../tests -DRP_ENABLE_DOWNLOADING=ON
+      - name: Build the example
+        run: |
+          source /opt/rh/devtoolset-7/enable
+          mkdir -p build-centos6 
+          cd build-centos6
+          cmake ../tests -DRP_ENABLE_DOWNLOADING=ON
       - name: Build all packages
         run: |
           source /opt/rh/devtoolset-7/enable
@@ -41,8 +41,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install opengl
       run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev ninja-build
-    # - name: Build the example
-    #   run: mkdir -p build-gcc && cd build-gcc && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON
+    - name: Build the example
+      run: mkdir -p build-gcc && cd build-gcc && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON
     - name: Build all packages
       run: |
         mkdir -p build-all-gcc 
@@ -56,8 +56,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    # - name: Build the example
-    #   run: mkdir -p build-mac && cd build-mac && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
+    - name: Build the example
+      run: mkdir -p build-mac && cd build-mac && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
     - name: Build all packages
       run: |
         export PATH=$(brew --prefix gettext)/bin:$PATH
@@ -73,11 +73,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    # - name: Build the example
-    #   run: |
-    #     mkdir build-win 
-    #     cd build-win 
-    #     cmake ../tests -DRP_ENABLE_DOWNLOADING=ON
+    - name: Build the example
+      run: |
+        mkdir build-win 
+        cd build-win 
+        cmake ../tests -DRP_ENABLE_DOWNLOADING=ON
     - name: Build all packages
       run: |
         mkdir build-all-win

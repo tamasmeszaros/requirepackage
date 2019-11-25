@@ -4,11 +4,8 @@ endif()
 
 set(_wx_git_tag v${RP_wxWidgets_VERSION})
 
-if(RP_wxWidgets_VERSION VERSION_EQUAL 3.1.1)
-    set(_wx_git_tag v3.1.1-patched_tm)
-    if (MSVC)
-        set(_wx_git_tag v3.1.1-patched)
-    endif()
+if(RP_wxWidgets_VERSION VERSION_EQUAL 3.1.1 AND MSVC)
+    set(_wx_git_tag v3.1.1-patched)
 endif()
 
 set(_patch_command "")
