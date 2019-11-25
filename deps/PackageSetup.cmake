@@ -17,4 +17,8 @@ set (RP_wxWidgets_VERSION 3.1.3)
 #     # list(REMOVE_ITEM RP_PACKAGES wxWidgets)
 #endif()
 
-set(RP_ALL_TARGETS ${RP_PACKAGES})
+if (NOT BUILD_SHARED_LIBS)
+    set(TBB_STATIC ON)
+endif ()
+
+set(RP_ALL_TARGETS TBB wxWidgets Clipper ZLIB )#${RP_PACKAGES})
