@@ -22,7 +22,8 @@ rp_add_cmake_project(OpenVDB
                         ${GIT_EXECUTABLE} apply --whitespace=nowarn ${CMAKE_CURRENT_SOURCE_DIR}/openvdb-mods.patch
     CMAKE_ARGS
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON 
-        -DOPENVDB_BUILD_PYTHON_MODULE=OFF 
+        -DOPENVDB_BUILD_PYTHON_MODULE=OFF
+        # -DCMAKE_CXX_FLAGS=-D_USE_MATH_DEFINES
         -DUSE_BLOSC=ON
         -DOPENVDB_CORE_SHARED=${_build_shared} 
         -DOPENVDB_CORE_STATIC=${_build_static}

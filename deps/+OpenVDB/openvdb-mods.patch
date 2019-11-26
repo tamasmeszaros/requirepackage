@@ -1693,6 +1693,19 @@ index 0015f81..cb6084a 100644
  
  namespace openvdb {
  OPENVDB_USE_VERSION_NAMESPACE
+diff --git a/openvdb/Platform.h b/openvdb/Platform.h
+index 2144c36..6832c79 100644
+--- a/openvdb/Platform.h
++++ b/openvdb/Platform.h
+@@ -266,7 +266,7 @@ using boost::uint64_t;
+     #define OPENVDB_EXPORT __attribute__((visibility("default")))
+     #define OPENVDB_IMPORT __attribute__((visibility("default")))
+ #endif
+-#ifdef _WIN32
++#ifdef _MSC_VER
+     #ifdef OPENVDB_DLL
+         #define OPENVDB_EXPORT __declspec(dllexport)
+         #define OPENVDB_IMPORT __declspec(dllimport)
 diff --git a/openvdb/PlatformConfig.h b/openvdb/PlatformConfig.h
 index 20ad9a3..c2dd1ef 100644
 --- a/openvdb/PlatformConfig.h
@@ -1736,6 +1749,43 @@ index 57fbec0..55b3850 100644
    )
    if(OPENVDB_BUILD_CORE)
      list(APPEND RPATHS ${CMAKE_INSTALL_PREFIX}/lib)
+diff --git a/openvdb/io/TempFile.cc b/openvdb/io/TempFile.cc
+index 6d355a5..346b705 100644
+--- a/openvdb/io/TempFile.cc
++++ b/openvdb/io/TempFile.cc
+@@ -33,7 +33,7 @@
+ #include "TempFile.h"
+ 
+ #include <openvdb/Exceptions.h>
+-#ifndef _MSC_VER
++#if !defined(_MSC_VER) && !defined(__MINGW32__)
+ #include <boost/iostreams/stream.hpp>
+ #include <boost/iostreams/device/file_descriptor.hpp>
+ #include <cstdlib> // for std::getenv(), mkstemp()
+@@ -64,7 +64,7 @@ struct TempFile::TempFileImpl
+     /// @internal boost::filesystem::unique_path(), etc. might be useful here,
+     /// but as of 9/2014, Houdini ships without the Boost.Filesystem library,
+     /// which makes it much less convenient to use that library.
+-#ifndef _MSC_VER
++#if !defined(_MSC_VER) && !defined(__MINGW32__)
+     TempFileImpl(std::ostream& os): mFileDescr(-1) { this->init(os); }
+ 
+     void init(std::ostream& os)
+diff --git a/openvdb/math/Math.h b/openvdb/math/Math.h
+index d10eff6..cbd4880 100644
+--- a/openvdb/math/Math.h
++++ b/openvdb/math/Math.h
+@@ -35,6 +35,10 @@
+ #ifndef OPENVDB_MATH_HAS_BEEN_INCLUDED
+ #define OPENVDB_MATH_HAS_BEEN_INCLUDED
+ 
++#ifndef _USE_MATH_DEFINES
++#define _USE_MATH_DEFINES
++#endif
++
+ #include <openvdb/Platform.h>
+ #include <openvdb/version.h>
+ #include <boost/numeric/conversion/conversion_traits.hpp>
 diff --git a/openvdb/unittest/CMakeLists.txt b/openvdb/unittest/CMakeLists.txt
 index c9e0c34..7e261c0 100644
 --- a/openvdb/unittest/CMakeLists.txt
