@@ -4,8 +4,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
   
   ExternalProject_Add(rp_OpenSSL
       EXCLUDE_FROM_ALL ON
-      URL "https://github.com/openssl/openssl/archive/OpenSSL_1_1_0g.tar.gz"
-      URL_HASH SHA256=8e9516b8635bb9113c51a7b5b27f9027692a56b104e75b709e588c3ffd6a0422
+      URL https://www.openssl.org/source/openssl-1.1.1d.tar.gz
+      URL_HASH SHA256=1e3a91bc1f9dfce01af26026f856e064eab4c8ee0a8f457b5ae30b40b8b711f2
       BUILD_IN_SOURCE ON
       CONFIGURE_COMMAND ./config
           "--prefix=${CMAKE_INSTALL_PREFIX}"

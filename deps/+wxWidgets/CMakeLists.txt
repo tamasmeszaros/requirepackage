@@ -26,7 +26,7 @@ require_dependency(TIFF)
         GIT_TAG ${_wx_git_tag}
         PATCH_COMMAND "${_patch_command}"
         CMAKE_ARGS
-            -DwxBUILD_PRECOMP=ON
+            -DwxBUILD_PRECOMP=OFF
             ${_wx_toolkit}
             -DwxUSE_DETECT_SM=OFF
             -DwxUSE_UNICODE=ON
