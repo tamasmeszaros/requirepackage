@@ -21,4 +21,4 @@ if (NOT BUILD_SHARED_LIBS)
     set(TBB_STATIC ON)
 endif ()
 
-set(RP_ALL_TARGETS TBB wxWidgets Clipper ZLIB )#${RP_PACKAGES})
+set(RP_ALL_TARGETS ${RP_PACKAGES})

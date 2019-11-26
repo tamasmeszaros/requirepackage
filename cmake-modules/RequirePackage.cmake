@@ -98,49 +98,58 @@ function(download_package)
         set(_configs_line "-DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}")
     endif ()
 
-    message(STATUS "Configs line: ${_configs_line}")
-
-    if(NOT RP_ARGS_QUIET AND NOT EXISTS ${RP_BUILD_PATH})
+    set(_postfix_line "")
+    foreach(_cf ${_CONFIGS})
+        string(TOUPPER "${_cf}" _CF)
+        if (RP_${_CF}_POSTFIX)
+            list(APPEND _postfix_line -DRP_${_CF}_POSTFIX:STRING=${RP_${_CF}_POSTFIX})
+        endif ()
+    endforeach()
+    
+    if(NOT RP_ARGS_QUIET)
         message(STATUS "-----------------------------------------------------------------------------")
-        message(STATUS "Initializing RequirePackage repository cache")
+        message(STATUS "Initializing/Updating RequirePackage repository cache")
         message(STATUS "-----------------------------------------------------------------------------")
-                    
-        file(MAKE_DIRECTORY ${RP_BUILD_PATH})
-
-        set(_apple_line "")
-        if (APPLE)
-            if (NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-                set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
-            endif ()
-            list (APPEND _apple_line "-DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
-        endif()
         
-        execute_process(
-            COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -A "${CMAKE_GENERATOR_PLATFORM}"
-                    -D "CMAKE_MAKE_PROGRAM:FILE=${CMAKE_MAKE_PROGRAM}"
-                    -D "CMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}"
-                    -D "CMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}"
-                    -D "CMAKE_INSTALL_PREFIX:PATH=${RP_ARGS_INSTALL_PATH}"
-                    -D "RP_FORCE_DOWNLOADING:BOOL=${RP_FORCE_DOWNLOADING}"
-                    -D "RP_FIND_QUIETLY:BOOL=${RP_ARGS_QUIET}"
-                    -D "RP_FIND_REQUIRED:BOOL=OFF"
-                    -D "BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
-                    -D "AS_RP_PROCESS:INTERNAL=TRUE"
-                    "${_configs_line}"
-                    ${_apple_line}
-                ${RP_ARGS_REPOSITORY_PATH}
-            RESULT_VARIABLE CONFIG_STEP_RESULT
-            ${OUTPUT_QUIET}
-            WORKING_DIRECTORY "${RP_BUILD_PATH}"
-        )
-
-        if(CONFIG_STEP_RESULT)
-            if(NOT RP_ARGS_QUIET OR RP_ARGS_REQUIRED)    
-                message(${_err_type} "CMake step for ${RP_ARGS_PACKAGE} failed: ${CONFIG_STEP_RESULT}")
-            endif()
+        if (NOT EXISTS ${RP_BUILD_PATH})
+            file(MAKE_DIRECTORY ${RP_BUILD_PATH})
         endif()
-
     endif()
+    
+    set(_apple_line "")
+    if (APPLE)
+        if (NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+            set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
+        endif ()
+        list (APPEND _apple_line "-DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+    endif()
+    
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -A "${CMAKE_GENERATOR_PLATFORM}"
+                -D "CMAKE_MAKE_PROGRAM:FILE=${CMAKE_MAKE_PROGRAM}"
+                -D "CMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}"
+                -D "CMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}"
+                -D "CMAKE_INSTALL_PREFIX:PATH=${RP_ARGS_INSTALL_PATH}"
+                -D "RP_FORCE_DOWNLOADING:BOOL=${RP_FORCE_DOWNLOADING}"
+                -D "RP_FIND_QUIETLY:BOOL=${RP_ARGS_QUIET}"
+                -D "RP_FIND_REQUIRED:BOOL=OFF"
+                -D "BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
+                -D "AS_RP_PROCESS:INTERNAL=TRUE"
+                "${_configs_line}"
+                "${_postfix_line}"
+                ${_apple_line}
+            ${RP_ARGS_REPOSITORY_PATH}
+        RESULT_VARIABLE CONFIG_STEP_RESULT
+        ${OUTPUT_QUIET}
+        WORKING_DIRECTORY "${RP_BUILD_PATH}"
+    )
+
+    if(CONFIG_STEP_RESULT)
+        if(NOT RP_ARGS_QUIET OR RP_ARGS_REQUIRED)    
+            message(${_err_type} "CMake step for ${RP_ARGS_PACKAGE} failed: ${CONFIG_STEP_RESULT}")
+        endif()
+    endif()
+
     
     # Hide output if requested
     if (NOT RP_ARGS_QUIET)

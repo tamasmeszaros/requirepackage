@@ -114,10 +114,12 @@ function(require_dependency dep_name )
 
   # Ignore REQUIRED, forward QUIET of RP
 
-  set(target_ off)
-  if (TARGET rp_${dep_name})
-    set(target_ on)
-  endif()
+  if (AS_RP_PROCESS)
+    list(FIND ${PACKAGE}_DEPENDS rp_${dep_name} _is_added_idx)
+    if (_is_added_idx GREATER -1 OR RP_${dep_name}_FOUND OR ${dep_name}_FOUND)
+      return()
+    endif ()
+  endif ()
 
   if(NOT RP_FORCE_DOWNLOADING OR NOT _found_target)
     find_package(${dep_name} ${dep_ver} QUIET ${RD_ARGS_UNPARSED_ARGUMENTS})
@@ -126,7 +128,7 @@ function(require_dependency dep_name )
     endif()
 
     if(RP_${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
-      message(STATUS "${dep_name} (installed) => ${PACKAGE}")
+      message(STATUS "Link ${dep_name} (installed) to rp_${PACKAGE}")
     endif()
   endif()
 
@@ -137,7 +139,7 @@ function(require_dependency dep_name )
       set(${PACKAGE}_DEPENDS "${${PACKAGE}_DEPENDS}" CACHE INTERNAL "")
 
       if(NOT RP_${dep_name}_FOUND AND NOT RP_FIND_QUIETLY)
-        message(STATUS "${dep_name} (building) => ${PACKAGE}")
+        message(STATUS "Link rp_${dep_name} to rp_${PACKAGE}")
       endif()
     endif()
   endif()
@@ -151,13 +153,31 @@ function(rp_add_cmake_project projectname)
   cmake_parse_arguments(P_ARGS "" "INSTALL_DIR;BINARY_DIR" "CMAKE_ARGS" ${ARGN})
 
   set(_configs_line -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE})
+  set(_postfix_line "")
+
+  set(RP_RELEASE_POSTFIX "" CACHE STRING "")
+  set(RP_DEBUG_POSTFIX "d" CACHE STRING "")
+  set(RP_RELWITHDEBINFO_POSTFIX "_rwdi" CACHE STRING "")
+  set(RP_MINSIZEREL_POSTFIX "_msr" CACHE STRING "")
   
   if (_is_multi)
     #string(REPLACE ";" " " _configs "${CMAKE_CONFIGURATION_TYPES}")
     #set(_configs_line "-DCMAKE_CONFIGURATION_TYPES:STRING=${_configs}")
     set(_configs_line "")
+    set(_configs ${CMAKE_CONFIGURATION_TYPES})
+    foreach(_Conf ${_configs})
+      string(TOUPPER "${_Conf}" _CONF)
+      if (RP_${_CONF}_POSTFIX)
+        list(APPEND _postfix_line -DCMAKE_${_CONF}_POSTFIX:STRING=${RP_${_CONF}_POSTFIX})
+      endif ()
+    endforeach()
   else ()
     set(_configs_line -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE})
+      string(TOUPPER "${CMAKE_BUILD_TYPE}" _CONF)
+      set(_conf ${RP_${_CONF}_POSTFIX})
+      if(RP_${_CONF}_POSTFIX)
+        list(APPEND _postfix_line -DCMAKE_${_CONF}_POSTFIX:STRING=${RP_${_CONF}_POSTFIX})
+      endif ()
   endif ()
   
   ExternalProject_Add(
@@ -170,9 +190,9 @@ function(rp_add_cmake_project projectname)
           -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
           -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
           -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
-          -DCMAKE_DEBUG_POSTFIX:STRING=d
           -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
           "${_configs_line}"
+          "${_postfix_line}"
           ${P_ARGS_CMAKE_ARGS}
      ${P_ARGS_UNPARSED_ARGUMENTS}
   )
