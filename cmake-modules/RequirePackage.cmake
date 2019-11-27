@@ -15,6 +15,7 @@ cmake_dependent_option(RP_FORCE_DOWNLOADING "Force downloading packages even if 
 
 set(RP_REPOSITORY_DIR ${CMAKE_CURRENT_LIST_DIR}/../deps CACHE STRING "Package repository location")
 set(RP_BUILD_PATH ${PROJECT_BINARY_DIR}/rp_packages_build CACHE STRING "Binary dir for downloaded package builds")
+option(RP_BUILD_SHARED_LIBS "Build dependencies as shared libraries" ${BUILD_SHARED_LIBS})
 
 mark_as_advanced(RP_BUILD_PATH)
 
@@ -133,7 +134,7 @@ function(download_package)
                 -D "RP_FORCE_DOWNLOADING:BOOL=${RP_FORCE_DOWNLOADING}"
                 -D "RP_FIND_QUIETLY:BOOL=${RP_ARGS_QUIET}"
                 -D "RP_FIND_REQUIRED:BOOL=OFF"
-                -D "BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
+                -D "BUILD_SHARED_LIBS=${RP_BUILD_SHARED_LIBS}"
                 -D "AS_RP_PROCESS:INTERNAL=TRUE"
                 "${_configs_line}"
                 "${_postfix_line}"

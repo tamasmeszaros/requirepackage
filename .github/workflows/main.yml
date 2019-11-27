@@ -136,3 +136,7 @@ jobs:
         cd build-all-mingw
         cmake ../deps -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DBUILD_SHARED_LIBS=OFF -DRP_FORCE_DOWNLOADING=ON
         cmake --build . --config Release
+    - uses: actions/upload-artifact@v1
+      with:
+        name: mingw-static-64bit
+        path: build-all-mingw/destdir/usr/local
