@@ -116,3 +116,23 @@ jobs:
       with:
         name: windows-static-64bit
         path: build-all-win/destdir/usr/local
+
+  build-mingw:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download ninja
+      run: choco install ninja
+    - name: Build the example
+      run: |
+        mkdir build-mingw
+        cd build-mingw 
+        cmake ../tests -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DRP_ENABLE_DOWNLOADING=ON
+    - name: Build all packages
+      run: |
+        mkdir build-all-mingw
+        cd build-all-mingw
+        cmake ../deps -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DBUILD_SHARED_LIBS=OFF -DRP_FORCE_DOWNLOADING=ON
+        cmake --build . --config Release

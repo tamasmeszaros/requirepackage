@@ -1,6 +1,6 @@
 require_dependency(Blosc)
 require_dependency(TBB)
-require_dependency(Boost)
+require_dependency(Boost VERSION 1.70 COMPONENTS iostreams system)
 require_dependency(OpenEXR)
 
 if(BUILD_SHARED_LIBS)
