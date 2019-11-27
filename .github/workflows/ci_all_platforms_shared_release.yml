@@ -1,4 +1,4 @@
-name: CI-all-platforms
+name: CI-all-platforms-shared-release
 
 on: [push]
 
@@ -45,13 +45,13 @@ jobs:
           source /opt/rh/devtoolset-7/enable
           mkdir -p build-centos6 
           cd build-centos6
-          cmake ../tests -DRP_ENABLE_DOWNLOADING=ON
+          cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DBUILD_SHARED_LIBS=ON -DRP_CONFIGURATION_TYPES=Release
       - name: Build all packages
         run: |
           source /opt/rh/devtoolset-7/enable
           mkdir -p build-all-centos6
           cd build-all-centos6 
-          cmake ../deps -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/
+          cmake ../deps -GNinja -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/ -DRP_FORCE_DOWNLOADING=ON
           cmake --build .
       - name: Create archive of dependencies
         run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
@@ -69,12 +69,12 @@ jobs:
     - name: Install opengl
       run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev ninja-build
     - name: Build the example
-      run: mkdir -p build-gcc && cd build-gcc && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON
+      run: mkdir -p build-gcc && cd build-gcc && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release -DBUILD_SHARED_LIBS=ON
     - name: Build all packages
       run: |
         mkdir -p build-all-gcc 
         cd build-all-gcc
-        cmake ../deps -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
+        cmake ../deps -GNinja -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
         cmake --build .
 
   build-mac:
@@ -84,14 +84,14 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build the example
-      run: mkdir -p build-mac && cd build-mac && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
+      run: mkdir -p build-mac && cd build-mac && cmake ../tests -DBUILD_SHARED_LIBS=ON -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
     - name: Build all packages
       run: |
         export PATH=$(brew --prefix gettext)/bin:$PATH
         msgfmt --version
         mkdir -p build-all-mac 
         cd build-all-mac 
-        cmake ../deps -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release 
+        cmake ../deps -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
         cmake --build . -- -j
 
   build-msvc:
@@ -104,14 +104,13 @@ jobs:
       run: |
         mkdir build-win 
         cd build-win 
-        cmake ../tests -DRP_ENABLE_DOWNLOADING=ON
+        cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DBUILD_SHARED_LIBS=ON -DRP_CONFIGURATION_TYPES=Release
     - name: Build all packages
       run: |
         mkdir build-all-win
         cd build-all-win
-        cmake ../deps -DBUILD_SHARED_LIBS=OFF
+        cmake ../deps -DBUILD_SHARED_LIBS=ON -DRP_FORCE_DOWNLOADING=ON
         cmake --build . --config Release -- /m
-        cmake --build . --config Debug -- /m
     - uses: actions/upload-artifact@v1
       with:
         name: windows-static-64bit
@@ -129,13 +128,13 @@ jobs:
       run: |
         mkdir build-mingw
         cd build-mingw 
-        cmake ../tests -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DRP_ENABLE_DOWNLOADING=ON
+        cmake ../tests -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DRP_CONFIGURATION_TYPES=Release -DRP_ENABLE_DOWNLOADING=ON -DBUILD_SHARED_LIBS=ON
     - name: Build all packages
       run: |
         mkdir build-all-mingw
         cd build-all-mingw
-        cmake ../deps -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DBUILD_SHARED_LIBS=OFF -DRP_FORCE_DOWNLOADING=ON
-        cmake --build . --config Release
+        cmake ../deps -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DRP_FORCE_DOWNLOADING=ON
+        cmake --build .
     - uses: actions/upload-artifact@v1
       with:
         name: mingw-static-64bit
