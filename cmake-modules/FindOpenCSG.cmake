@@ -4,11 +4,6 @@ find_library(OpenCSG_LIBS NAMES opencsg)
 
 find_file(OpenCSG_HEADER NAMES opencsg.h opencsg/opencsg.h)
 
-if (NOT OpenCSG_FIND_QUIETLY)
-    message(STATUS "OpenCSG libs: ${OpenCSG_LIBS}")
-    message(STATUS "OpenCSG include: ${OpenCSG_HEADER}")
-endif()
-
 if (NOT OpenCSG_LIBS OR NOT OpenCSG_HEADER)
     find_dependency(OpenCSG CONFIG)
 else()
@@ -20,4 +15,9 @@ else()
         INTERFACE_INCLUDE_DIRECTORIES "${OpenCSG_INCLUDE_DIR}"
         )
     set(OpenCSG_FOUND TRUE)
+endif()
+
+if (NOT OpenCSG_FIND_QUIETLY)
+    message(STATUS "OpenCSG libs: ${OpenCSG_LIBS}")
+    message(STATUS "OpenCSG include: ${OpenCSG_HEADER}")
 endif()
