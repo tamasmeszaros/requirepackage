@@ -97,7 +97,6 @@ else()
 
 endif()
 
-
 # make variables changeable
 mark_as_advanced(
 	NLopt_INCLUDE_DIR
@@ -105,7 +104,6 @@ mark_as_advanced(
 	NLopt_LIBS
 	NLopt_DEFINITIONS
 	)
-
 
 # report result
 if(NLopt_FOUND)
@@ -121,4 +119,7 @@ if(NLopt_FOUND)
 	# target_link_libraries(Nlopt::Nlopt INTERFACE ${NLopt_LIBS})
 	# target_include_directories(Nlopt::Nlopt INTERFACE ${NLopt_INCLUDE_DIR})
     # target_compile_definitions(Nlopt::Nlopt INTERFACE ${NLopt_DEFINITIONS})
+else()
+	include(CMakeFindDependencyMacro)
+	find_dependency(NLopt ${NLopt_FIND_VERSION} CONFIG COMPONENTS ${NLopt_FIND_COMPONENTS})
 endif()
