@@ -113,7 +113,7 @@ jobs:
         cmake --build . --config Release -- /m
     - uses: actions/upload-artifact@v1
       with:
-        name: windows-static-64bit
+        name: windows-shared-release-64bit
         path: build-all-win/destdir/usr/local
 
   build-mingw:
@@ -137,5 +137,5 @@ jobs:
         cmake --build .
     - uses: actions/upload-artifact@v1
       with:
-        name: mingw-static-64bit
+        name: mingw-shared-release-64bit
         path: build-all-mingw/destdir/usr/local
