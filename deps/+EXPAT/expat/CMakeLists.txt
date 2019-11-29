@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.0)
 
 project(EXPAT)
 
+if (BUILD_SHARED_LIBS AND MSVC)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
 add_library(expat
     xmlparse.c
     xmlrole.c
