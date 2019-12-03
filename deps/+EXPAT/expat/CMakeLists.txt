@@ -45,22 +45,25 @@ install(TARGETS expat EXPAT
 )
 
 export(EXPORT ${PROJECT_NAME}Targets 
-       FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake" 
+       FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake" 
        NAMESPACE ${PROJECT_NAME}:: )
 
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 install(EXPORT ${PROJECT_NAME}Targets
   FILE
-    "${PROJECT_NAME}Config.cmake"
+    "${PROJECT_NAME}Targets.cmake"
   NAMESPACE
     ${PROJECT_NAME}::
   DESTINATION
     ${ConfigPackageLocation}
 )
 
+configure_file(config.cmake.in ${PROJECT_NAME}Config.cmake @ONLY)
+
 install(
     FILES
+      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
       "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     DESTINATION
       ${ConfigPackageLocation}
