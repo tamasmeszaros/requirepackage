@@ -111,10 +111,10 @@ jobs:
         cd build-all-win
         cmake ../deps -DBUILD_SHARED_LIBS=ON -DRP_FORCE_DOWNLOADING=ON
         cmake --build . --config Debug -- /m
-    - uses: actions/upload-artifact@v1
-      with:
-        name: windows-shared-debug-64bit
-        path: build-all-win/destdir/usr/local
+    # - uses: actions/upload-artifact@v1
+    #   with:
+    #     name: windows-shared-debug-64bit
+    #     path: build-all-win/destdir/usr/local
 
   build-mingw:
 
@@ -135,7 +135,7 @@ jobs:
         cd build-all-mingw
         cmake ../deps -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DRP_FORCE_DOWNLOADING=ON
         cmake --build .
-    - uses: actions/upload-artifact@v1
-      with:
-        name: mingw-shared-debug-64bit
-        path: build-all-mingw/destdir/usr/local
+    # - uses: actions/upload-artifact@v1
+    #   with:
+    #     name: mingw-shared-debug-64bit
+    #     path: build-all-mingw/destdir/usr/local
