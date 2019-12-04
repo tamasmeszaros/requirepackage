@@ -53,8 +53,8 @@ jobs:
           cd build-all-centos6 
           cmake ../deps -GNinja -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/ -DRP_FORCE_DOWNLOADING=ON
           cmake --build .
-      - name: Create archive of dependencies
-        run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
+      #- name: Create archive of dependencies
+      #  run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
       # - uses: actions/upload-artifact@v1
       #   with:
       #     name: deps-linux-static-64bit
