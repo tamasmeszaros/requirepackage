@@ -24,7 +24,7 @@ jobs:
   #       run: |
   #         mkdir -p build-all-fedora
   #         cd build-all-fedora
-  #         cmake ../deps -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/
+  #         cmake ../packages -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/
   #         cmake --build .
   #     - uses: actions/upload-artifact@v1
   #       with:
@@ -51,7 +51,7 @@ jobs:
           source /opt/rh/devtoolset-7/enable
           mkdir -p build-all-centos6
           cd build-all-centos6 
-          cmake ../deps -GNinja -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/ -DRP_FORCE_DOWNLOADING=ON
+          cmake ../packages -GNinja -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/ -DRP_FORCE_DOWNLOADING=ON
           cmake --build .
       - name: Create archive of dependencies
         run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
@@ -74,7 +74,7 @@ jobs:
       run: |
         mkdir -p build-all-gcc 
         cd build-all-gcc
-        cmake ../deps -GNinja -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
+        cmake ../packages -GNinja -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
         cmake --build .
 
   build-mac:
@@ -91,7 +91,7 @@ jobs:
         msgfmt --version
         mkdir -p build-all-mac 
         cd build-all-mac 
-        cmake ../deps -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
+        cmake ../packages -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
         cmake --build . -- -j
 
   build-msvc:
@@ -109,7 +109,7 @@ jobs:
       run: |
         mkdir build-all-win
         cd build-all-win
-        cmake ../deps -DBUILD_SHARED_LIBS=ON -DRP_FORCE_DOWNLOADING=ON
+        cmake ../packages -DBUILD_SHARED_LIBS=ON -DRP_FORCE_DOWNLOADING=ON
         cmake --build . --config Release -- /m
     # - uses: actions/upload-artifact@v1
     #   with:
@@ -133,7 +133,7 @@ jobs:
       run: |
         mkdir build-all-mingw
         cd build-all-mingw
-        cmake ../deps -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DRP_FORCE_DOWNLOADING=ON
+        cmake ../packages -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DRP_FORCE_DOWNLOADING=ON
         cmake --build .
     # - uses: actions/upload-artifact@v1
     #   with:

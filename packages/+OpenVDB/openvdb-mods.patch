@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 580b353..fc2b130 100644
+index 580b353..4b25ca8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -63,8 +63,9 @@
@@ -26,6 +26,17 @@ index 580b353..fc2b130 100644
      cmake/FindOpenVDB.cmake
      cmake/FindTBB.cmake
      cmake/OpenVDBGLFW3Setup.cmake
+@@ -565,6 +563,10 @@ determine the ABI number. You may set this to force a given ABI number.]=] FORCE
+ 
+ ##########################################################################
+ 
++if (MINGW)
++    add_compile_options(-Wa,-mbig-obj)
++endif ()
++
+ if(OPENVDB_BUILD_CORE)
+   add_subdirectory(openvdb)
+ endif()
 diff --git a/cmake/FindBlosc.cmake b/cmake/FindBlosc.cmake
 deleted file mode 100644
 index 5aacfdd..0000000
@@ -998,10 +1009,10 @@ index 63a2eda..6211071 100644
  endforeach()
  
 diff --git a/cmake/FindTBB.cmake b/cmake/FindTBB.cmake
-index bdf9c81..c6bdec9 100644
+index bdf9c81..ee70d15 100644
 --- a/cmake/FindTBB.cmake
 +++ b/cmake/FindTBB.cmake
-@@ -1,333 +1,332 @@
+@@ -1,333 +1,336 @@
 -# Copyright (c) DreamWorks Animation LLC
 +# The MIT License (MIT)
  #
@@ -1561,19 +1572,23 @@ index bdf9c81..c6bdec9 100644
 +
 +  if(NOT CMAKE_VERSION VERSION_LESS 3.0 AND TBB_FOUND)
 +    add_library(TBB::tbb UNKNOWN IMPORTED)
++    
 +    set_target_properties(TBB::tbb PROPERTIES
-+          INTERFACE_COMPILE_DEFINITIONS "${TBB_DEFINITIONS}"
++          INTERFACE_COMPILE_DEFINITIONS "${TBB_DEFINITIONS};$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:${TBB_DEFINITIONS_DEBUG}>;$<$<CONFIG:Release>:${TBB_DEFINITIONS_RELEASE}>"
 +          INTERFACE_LINK_LIBRARIES  "Threads::Threads;${CMAKE_DL_LIBS}"
 +          INTERFACE_INCLUDE_DIRECTORIES  ${TBB_INCLUDE_DIRS}
 +          IMPORTED_LOCATION              ${TBB_LIBRARIES})
-+    if(TBB_LIBRARIES_RELEASE AND TBB_LIBRARIES_DEBUG)
++          
++    if(TBB_LIBRARIES_RELEASE)
 +      set_target_properties(TBB::tbb PROPERTIES
-+          INTERFACE_COMPILE_DEFINITIONS "${TBB_DEFINITIONS};$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:${TBB_DEFINITIONS_DEBUG}>;$<$<CONFIG:Release>:${TBB_DEFINITIONS_RELEASE}>"
-+          IMPORTED_LOCATION_DEBUG          ${TBB_LIBRARIES_DEBUG}
 +          IMPORTED_LOCATION_RELWITHDEBINFO ${TBB_LIBRARIES_RELEASE}
 +          IMPORTED_LOCATION_RELEASE        ${TBB_LIBRARIES_RELEASE}
 +          IMPORTED_LOCATION_MINSIZEREL     ${TBB_LIBRARIES_RELEASE}
 +          )
++    endif()
++    
++    if(TBB_LIBRARIES_DEBUG)
++      set_target_properties(TBB::tbb PROPERTIES IMPORTED_LOCATION_DEBUG ${TBB_LIBRARIES_DEBUG})
 +    endif()
 +  endif()
  
