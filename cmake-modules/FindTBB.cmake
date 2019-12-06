@@ -109,18 +109,24 @@ if(NOT TBB_FOUND)
   # Check the build type
   ##################################
   
-  if(NOT DEFINED TBB_USE_DEBUG_BUILD)
-    if(CMAKE_BUILD_TYPE MATCHES "(Debug|DEBUG|debug)")
+  get_property(_is_multi GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+
+  if (NOT _is_multi)
+    if(NOT DEFINED TBB_USE_DEBUG_BUILD)
+      if(CMAKE_BUILD_TYPE MATCHES "(Debug|DEBUG|debug)")
+        set(TBB_BUILD_TYPE DEBUG)
+      else()
+        set(TBB_BUILD_TYPE RELEASE)
+      endif()
+    elseif(TBB_USE_DEBUG_BUILD)
       set(TBB_BUILD_TYPE DEBUG)
     else()
       set(TBB_BUILD_TYPE RELEASE)
     endif()
-  elseif(TBB_USE_DEBUG_BUILD)
-    set(TBB_BUILD_TYPE DEBUG)
   else()
-    set(TBB_BUILD_TYPE RELEASE)
+    set(TBB_BUILD_TYPE "")
   endif()
-  
+
   ##################################
   # Set the TBB search directories
   ##################################
@@ -243,15 +249,19 @@ if(NOT TBB_FOUND)
       if(TBB_${_comp}_LIBRARY_RELEASE)
         list(APPEND TBB_LIBRARIES_RELEASE "${TBB_${_comp}_LIBRARY_RELEASE}")
       endif()
-      if(TBB_${_comp}_LIBRARY_${TBB_BUILD_TYPE} AND NOT TBB_${_comp}_LIBRARY)
+      
+      if(NOT _is_multi AND TBB_${_comp}_LIBRARY_${TBB_BUILD_TYPE} AND NOT TBB_${_comp}_LIBRARY)
         set(TBB_${_comp}_LIBRARY "${TBB_${_comp}_LIBRARY_${TBB_BUILD_TYPE}}")
       endif()
 
       if(TBB_${_comp}_LIBRARY AND EXISTS "${TBB_${_comp}_LIBRARY}")
         set(TBB_${_comp}_FOUND TRUE)
+      elseif(_is_multi AND TBB_${_comp}_LIBRARY_RELEASE OR TBB_${_comp}_LIBRARY_DEBUG)
+        set(TBB_${_comp}_FOUND TRUE)
       else()
-        set(TBB_${_comp}_FOUND FALSE)
+        set(TBB_${_comp}_FOUND TRUE)
       endif()
+
 
       # Mark internal variables as advanced
       mark_as_advanced(TBB_${_comp}_LIBRARY_RELEASE)
@@ -268,7 +278,7 @@ if(NOT TBB_FOUND)
   set(TBB_DEFINITIONS_RELEASE "")
   set(TBB_DEFINITIONS_DEBUG "TBB_USE_DEBUG=1")
     
-  if(TBB_LIBRARIES_${TBB_BUILD_TYPE})
+  if(NOT _is_multi AND TBB_LIBRARIES_${TBB_BUILD_TYPE})
     set(TBB_LIBRARIES "${TBB_LIBRARIES_${TBB_BUILD_TYPE}}")
   endif()
   
@@ -277,14 +287,29 @@ if(NOT TBB_FOUND)
   endif()
 
   set(TBB_DEFINITIONS "")
-  if (MSVC AND TBB_STATIC)
+  if (MSVC)
     set(TBB_DEFINITIONS __TBB_NO_IMPLICIT_LINKAGE)
   endif ()
 
   unset (TBB_STATIC_SUFFIX)
 
+  # At the end of the day, _libs_all cannot be empty, some usable library has to be available
+   
+  set(_libs_all "${TBB_LIBRARIES}")
+  list(APPEND _libs_all ${TBB_LIBRARIES_RELEASE})
+  list(APPEND _libs_all ${TBB_LIBRARIES_DEBUG})
+
+  message(STATUS "  TBB_FOUND               = ${TBB_FOUND}")
+  message(STATUS "  TBB_INCLUDE_DIRS        = ${TBB_INCLUDE_DIRS}")
+  message(STATUS "  TBB_DEFINITIONS         = ${TBB_DEFINITIONS}")
+  message(STATUS "  TBB_LIBRARIES           = ${TBB_LIBRARIES}")
+  message(STATUS "  TBB_DEFINITIONS_DEBUG   = ${TBB_DEFINITIONS_DEBUG}")
+  message(STATUS "  TBB_LIBRARIES_DEBUG     = ${TBB_LIBRARIES_DEBUG}")
+  message(STATUS "  TBB_DEFINITIONS_RELEASE = ${TBB_DEFINITIONS_RELEASE}")
+  message(STATUS "  TBB_LIBRARIES_RELEASE   = ${TBB_LIBRARIES_RELEASE}")
+  message(STATUS "  _libs_all   = ${_libs_all}")
   find_package_handle_standard_args(TBB 
-      REQUIRED_VARS TBB_INCLUDE_DIRS TBB_LIBRARIES
+      REQUIRED_VARS TBB_INCLUDE_DIRS _libs_all
       FAIL_MESSAGE "TBB library cannot be found. Consider set TBBROOT environment variable."
       HANDLE_COMPONENTS
       VERSION_VAR TBB_VERSION)
@@ -299,8 +324,11 @@ if(NOT TBB_FOUND)
     set_target_properties(TBB::tbb PROPERTIES
           INTERFACE_COMPILE_DEFINITIONS "${TBB_DEFINITIONS};$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:${TBB_DEFINITIONS_DEBUG}>;$<$<CONFIG:Release>:${TBB_DEFINITIONS_RELEASE}>"
           INTERFACE_LINK_LIBRARIES  "Threads::Threads;${CMAKE_DL_LIBS}"
-          INTERFACE_INCLUDE_DIRECTORIES  ${TBB_INCLUDE_DIRS}
-          IMPORTED_LOCATION              ${TBB_LIBRARIES})
+          INTERFACE_INCLUDE_DIRECTORIES  ${TBB_INCLUDE_DIRS})
+
+    if (TBB_LIBRARIES)
+      set_target_properties(TBB::tbb PROPERTIES  IMPORTED_LOCATION "${TBB_LIBRARIES}")
+    endif ()
           
     if(TBB_LIBRARIES_RELEASE)
       set_target_properties(TBB::tbb PROPERTIES

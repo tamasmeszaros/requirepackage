@@ -1,3 +1,5 @@
+require_dependency(ZLIB)
+
 rp_add_cmake_project(OpenEXR
     GIT_REPOSITORY https://github.com/openexr/openexr.git
     GIT_TAG eae0e337c9f5117e78114fd05f7a415819df413a #v2.4.0
