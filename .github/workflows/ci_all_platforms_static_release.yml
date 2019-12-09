@@ -40,25 +40,27 @@ jobs:
       
     steps:
       - uses: actions/checkout@v1
+      - name: Install yasm
+        run: yum -y install yasm
       - name: Build the example
         run: |
           source /opt/rh/devtoolset-7/enable
           mkdir -p build-centos6 
           cd build-centos6
           cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release
-      - name: Build all packages
-        run: |
-          source /opt/rh/devtoolset-7/enable
-          mkdir -p build-all-centos6
-          cd build-all-centos6 
-          cmake ../packages -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/ -DRP_FORCE_DOWNLOADING=ON
-          cmake --build .
-      - name: Create archive of dependencies
-        run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
-      - uses: actions/upload-artifact@v1
-        with:
-          name: deps-linux-static-64bit
-          path: deps-linux-static-64bit.tar.gz
+      # - name: Build all packages
+      #   run: |
+      #     source /opt/rh/devtoolset-7/enable
+      #     mkdir -p build-all-centos6
+      #     cd build-all-centos6 
+      #     cmake ../packages -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/ -DRP_FORCE_DOWNLOADING=ON
+      #     cmake --build .
+      # - name: Create archive of dependencies
+      #   run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
+      # - uses: actions/upload-artifact@v1
+      #   with:
+      #     name: deps-linux-static-64bit
+      #     path: deps-linux-static-64bit.tar.gz
 
   build-gcc:
 
@@ -68,74 +70,76 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install opengl
       run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev ninja-build
+    - name: Install yasm
+      run: sudo apt -y install yasm
     - name: Build the example
       run: mkdir -p build-gcc && cd build-gcc && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release
-    - name: Build all packages
-      run: |
-        mkdir -p build-all-gcc 
-        cd build-all-gcc
-        cmake ../packages -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
-        cmake --build .
+    # - name: Build all packages
+    #   run: |
+    #     mkdir -p build-all-gcc 
+    #     cd build-all-gcc
+    #     cmake ../packages -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
+    #     cmake --build .
 
-  build-mac:
+  # build-mac:
 
-    runs-on: macos-latest
+  #   runs-on: macos-latest
 
-    steps:
-    - uses: actions/checkout@v1
-    - name: Build the example
-      run: mkdir -p build-mac && cd build-mac && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
-    - name: Build all packages
-      run: |
-        export PATH=$(brew --prefix gettext)/bin:$PATH
-        msgfmt --version
-        mkdir -p build-all-mac 
-        cd build-all-mac 
-        cmake ../packages -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
-        cmake --build . -- -j
+  #   steps:
+  #   - uses: actions/checkout@v1
+  #   - name: Build the example
+  #     run: mkdir -p build-mac && cd build-mac && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
+  #   - name: Build all packages
+  #     run: |
+  #       export PATH=$(brew --prefix gettext)/bin:$PATH
+  #       msgfmt --version
+  #       mkdir -p build-all-mac 
+  #       cd build-all-mac 
+  #       cmake ../packages -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
+  #       cmake --build . -- -j
 
-  build-msvc:
+  # build-msvc:
 
-    runs-on: windows-latest
+  #   runs-on: windows-latest
 
-    steps:
-    - uses: actions/checkout@v1
-    - name: Build the example
-      run: |
-        mkdir build-win 
-        cd build-win 
-        cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release
-    - name: Build all packages
-      run: |
-        mkdir build-all-win
-        cd build-all-win
-        cmake ../packages -DBUILD_SHARED_LIBS=OFF -DRP_FORCE_DOWNLOADING=ON
-        cmake --build . --config Release -- /m
-    - uses: actions/upload-artifact@v1
-      with:
-        name: windows-static-64bit
-        path: build-all-win/destdir/usr/local
+  #   steps:
+  #   - uses: actions/checkout@v1
+  #   - name: Build the example
+  #     run: |
+  #       mkdir build-win 
+  #       cd build-win 
+  #       cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release
+  #   - name: Build all packages
+  #     run: |
+  #       mkdir build-all-win
+  #       cd build-all-win
+  #       cmake ../packages -DBUILD_SHARED_LIBS=OFF -DRP_FORCE_DOWNLOADING=ON
+  #       cmake --build . --config Release -- /m
+  #   - uses: actions/upload-artifact@v1
+  #     with:
+  #       name: windows-static-64bit
+  #       path: build-all-win/destdir/usr/local
 
-  build-mingw:
+  # build-mingw:
 
-    runs-on: windows-latest
+  #   runs-on: windows-latest
 
-    steps:
-    - uses: actions/checkout@v1
-    - name: Download ninja
-      run: choco install ninja
-    - name: Build the example
-      run: |
-        mkdir build-mingw
-        cd build-mingw 
-        cmake ../tests -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DRP_CONFIGURATION_TYPES=Release -DRP_ENABLE_DOWNLOADING=ON
-    - name: Build all packages
-      run: |
-        mkdir build-all-mingw
-        cd build-all-mingw
-        cmake ../packages -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DRP_FORCE_DOWNLOADING=ON
-        cmake --build .
-    - uses: actions/upload-artifact@v1
-      with:
-        name: mingw-static-64bit
-        path: build-all-mingw/destdir/usr/local
+  #   steps:
+  #   - uses: actions/checkout@v1
+  #   - name: Download ninja
+  #     run: choco install ninja
+  #   - name: Build the example
+  #     run: |
+  #       mkdir build-mingw
+  #       cd build-mingw 
+  #       cmake ../tests -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DRP_CONFIGURATION_TYPES=Release -DRP_ENABLE_DOWNLOADING=ON
+  #   - name: Build all packages
+  #     run: |
+  #       mkdir build-all-mingw
+  #       cd build-all-mingw
+  #       cmake ../packages -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DRP_FORCE_DOWNLOADING=ON
+  #       cmake --build .
+  #   - uses: actions/upload-artifact@v1
+  #     with:
+  #       name: mingw-static-64bit
+  #       path: build-all-mingw/destdir/usr/local
