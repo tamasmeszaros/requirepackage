@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Install yasm
-        run: yum -y install yasm
+        run: yum -y install yasm gmp-devel
       - name: Build the example
         run: |
           source /opt/rh/devtoolset-7/enable
@@ -70,7 +70,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install opengl
       run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev ninja-build
-    - name: Install yasm
+    - name: Install yasm libgmp-dev
       run: sudo apt -y install yasm
     - name: Build the example
       run: mkdir -p build-gcc && cd build-gcc && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release
