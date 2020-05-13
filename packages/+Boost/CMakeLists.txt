@@ -107,17 +107,10 @@ set(_build_cmd ${_build_cmd}
                link=${_link}
                threading=multi
                boost.locale.icu=off
-               ${_boost_variants})
+               ${_boost_variants}
+               stage)
 
 set(_install_cmd ${_build_cmd} --prefix=${_prefix} install)
-                
-if (NOT _libs)
-    set(_install_cmd ${CMAKE_COMMAND} -E copy_directory boost ${CMAKE_INSTALL_PREFIX}/include/boost)
-    set(_build_cmd "")
-    set(_bootstrap_cmd "")
-else()
-    list(APPEND _build_cmd "stage")
-endif()
 
 ExternalProject_Add(
     rp_Boost

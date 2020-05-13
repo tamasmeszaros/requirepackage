@@ -176,9 +176,9 @@ function(download_package)
             execute_process(
                 COMMAND ${CMAKE_COMMAND}
                     -D "RP_PACKAGE:STRING=${RP_ARGS_PACKAGE}"
-                    -D "RP_${RP_ARGS_PACKAGE}_COMPONENTS=\"${RP_ARGS_COMPONENTS}\""
-                    -D "RP_${RP_ARGS_PACKAGE}_OPTIONAL_COMPONENTS=\"${RP_ARGS_OPTIONAL_COMPONENTS}\""
-                    -D "RP_${RP_ARGS_PACKAGE}_VERSION=\"${RP_ARGS_VERSION}\""
+                    -D "RP_${RP_ARGS_PACKAGE}_COMPONENTS=${RP_ARGS_COMPONENTS}"
+                    -D "RP_${RP_ARGS_PACKAGE}_OPTIONAL_COMPONENTS=${RP_ARGS_OPTIONAL_COMPONENTS}"
+                    -D "RP_${RP_ARGS_PACKAGE}_VERSION=${RP_ARGS_VERSION}"
                     -D "AS_RP_PROCESS:INTERNAL=ON"
                     -D "RP_FIND_QUIETLY:BOOL=${RP_ARGS_QUIET}"
                     -D "RP_FIND_REQUIRED:BOOL=${RP_ARGS_REQUIRED}"
