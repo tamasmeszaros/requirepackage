@@ -19,7 +19,10 @@ option(RP_BUILD_SHARED_LIBS "Build dependencies as shared libraries" ${BUILD_SHA
 
 mark_as_advanced(RP_BUILD_PATH)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/overrides)
+if (EXISTS ${CMAKE_CURRENT_LIST_DIR}/overrides)
+    list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/overrides)
+endif ()
+
 list(REMOVE_DUPLICATES CMAKE_MODULE_PATH)
 
 # Packages for which require_package is called are gathered in this list.
