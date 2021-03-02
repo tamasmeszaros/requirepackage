@@ -128,12 +128,12 @@ jobs:
       run: |
         mkdir build-mingw
         cd build-mingw 
-        cmake ../tests -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DRP_CONFIGURATION_TYPES=Release -DRP_ENABLE_DOWNLOADING=ON
+        cmake ../tests -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_RC_COMPILER=windres -DRP_CONFIGURATION_TYPES=Release -DRP_ENABLE_DOWNLOADING=ON
     - name: Build all packages
       run: |
         mkdir build-all-mingw
         cd build-all-mingw
-        cmake ../packages -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DRP_FORCE_DOWNLOADING=ON
+        cmake ../packages -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_RC_COMPILER=windres -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DRP_FORCE_DOWNLOADING=ON
         cmake --build .
     - uses: actions/upload-artifact@v1
       with:
