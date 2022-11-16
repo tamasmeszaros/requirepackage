@@ -141,7 +141,7 @@ ExternalProject_Add(
     dep_Boost
     URL "https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.zip"
     URL_HASH SHA256=f22143b5528e081123c3c5ed437e92f648fe69748e95fa6e2bd41484e2986cc3
-    DOWNLOAD_DIR ${DEP_DOWNLOAD_DIR}/Boost
+    DOWNLOAD_EXTRACT_TIMESTAMP ON
     CONFIGURE_COMMAND "${_bootstrap_cmd}"
     PATCH_COMMAND ${_patch_command}
     BUILD_COMMAND "${_build_cmd}"

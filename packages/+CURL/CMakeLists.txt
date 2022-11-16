@@ -7,6 +7,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
       URL https://www.openssl.org/source/openssl-1.1.1d.tar.gz
       URL_HASH SHA256=1e3a91bc1f9dfce01af26026f856e064eab4c8ee0a8f457b5ae30b40b8b711f2
       BUILD_IN_SOURCE ON
+      DOWNLOAD_EXTRACT_TIMESTAMP ON
       CONFIGURE_COMMAND ./config
           "--prefix=${CMAKE_INSTALL_PREFIX}"
           no-shared
