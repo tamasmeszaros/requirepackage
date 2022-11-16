@@ -31,41 +31,41 @@ jobs:
   #         name: deps-linux-fedora-static-64bit
   #         path: deps-linux-fedora-static-64bit.tar.gz
 
-  buid-gcc-centos6:
+  # buid-gcc-centos6:
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    container:
-      image:  meszarosq/centos6-devtoolset7:latest
+  #   container:
+  #     image:  meszarosq/centos6-devtoolset7:latest
       
-    steps:
-      - uses: actions/checkout@v1
-      - name: Build the example
-        run: |
-          source /opt/rh/devtoolset-7/enable
-          mkdir -p build-centos6 
-          cd build-centos6
-          cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release
-      - name: Build all packages
-        run: |
-          source /opt/rh/devtoolset-7/enable
-          mkdir -p build-all-centos6
-          cd build-all-centos6 
-          cmake ../packages -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/ -DRP_FORCE_DOWNLOADING=ON
-          cmake --build .
-      - name: Create archive of dependencies
-        run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
-      - uses: actions/upload-artifact@v1
-        with:
-          name: deps-linux-static-64bit
-          path: deps-linux-static-64bit.tar.gz
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - name: Build the example
+  #       run: |
+  #         source /opt/rh/devtoolset-7/enable
+  #         mkdir -p build-centos6 
+  #         cd build-centos6
+  #         cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release
+  #     - name: Build all packages
+  #       run: |
+  #         source /opt/rh/devtoolset-7/enable
+  #         mkdir -p build-all-centos6
+  #         cd build-all-centos6 
+  #         cmake ../packages -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/ -DRP_FORCE_DOWNLOADING=ON
+  #         cmake --build .
+  #     - name: Create archive of dependencies
+  #       run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
+  #     - uses: actions/upload-artifact@v1
+  #       with:
+  #         name: deps-linux-static-64bit
+  #         path: deps-linux-static-64bit.tar.gz
 
   build-gcc:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout
     - name: Install opengl
       run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev ninja-build
     - name: Build the example
@@ -82,7 +82,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout
     - name: Build the example
       run: mkdir -p build-mac && cd build-mac && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
     - name: Build all packages
@@ -99,7 +99,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout
     - name: Build the example
       run: |
         mkdir build-win 
@@ -121,7 +121,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout
     - name: Download ninja
       run: choco install ninja
     - name: Build the example

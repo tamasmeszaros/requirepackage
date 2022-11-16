@@ -31,34 +31,34 @@ jobs:
   #         name: deps-linux-fedora-static-64bit
   #         path: deps-linux-fedora-static-64bit.tar.gz
 
-  buid-gcc-centos6:
+  # buid-gcc-centos6:
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    container:
-      image:  meszarosq/centos6-devtoolset7:latest
+  #   container:
+  #     image:  meszarosq/centos6-devtoolset7:latest
       
-    steps:
-      - uses: actions/checkout@v1
-      - name: Build the example
-        run: |
-          source /opt/rh/devtoolset-7/enable
-          mkdir -p build-centos6 
-          cd build-centos6
-          cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DBUILD_SHARED_LIBS=ON -DRP_CONFIGURATION_TYPES=Debug
-      - name: Build all packages
-        run: |
-          source /opt/rh/devtoolset-7/enable
-          mkdir -p build-all-centos6
-          cd build-all-centos6 
-          cmake ../packages -GNinja -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/ -DRP_FORCE_DOWNLOADING=ON
-          cmake --build .
-      #- name: Create archive of dependencies
-      #  run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
-      # - uses: actions/upload-artifact@v1
-      #   with:
-      #     name: deps-linux-static-64bit
-      #     path: deps-linux-static-64bit.tar.gz
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - name: Build the example
+  #       run: |
+  #         source /opt/rh/devtoolset-7/enable
+  #         mkdir -p build-centos6 
+  #         cd build-centos6
+  #         cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DBUILD_SHARED_LIBS=ON -DRP_CONFIGURATION_TYPES=Debug
+  #     - name: Build all packages
+  #       run: |
+  #         source /opt/rh/devtoolset-7/enable
+  #         mkdir -p build-all-centos6
+  #         cd build-all-centos6 
+  #         cmake ../packages -GNinja -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/ -DRP_FORCE_DOWNLOADING=ON
+  #         cmake --build .
+  #     #- name: Create archive of dependencies
+  #     #  run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
+  #     # - uses: actions/upload-artifact@v1
+  #     #   with:
+  #     #     name: deps-linux-static-64bit
+  #     #     path: deps-linux-static-64bit.tar.gz
 
   build-gcc:
 
