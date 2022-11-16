@@ -101,7 +101,7 @@ if (_cfg_rel GREATER -1 OR _cfg_relwdeb GREATER -1 OR _cfg_minsizerel GREATER -1
     list(APPEND _boost_variants release)
 endif()
 
-if ( (NOT MSVC AND _cfg_deb GREATER -1) OR (MSVC AND ${DEP_DEBUG}) )
+if (_cfg_deb GREATER -1)
     list(APPEND _boost_variants debug)
 endif()
 
@@ -109,16 +109,11 @@ if (NOT _boost_variants)
     set(_boost_variants release)
 endif()
 
-set(_boost_layout system)
-if (MSVC)
-    set(_boost_layout versioned)
-endif ()
-
 set(_build_cmd ${_build_cmd}
                ${_boost_flags}
                -j${NPROC}
                ${_libs}
-               --layout=${_boost_layout}
+               --layout=versioned
                --debug-configuration
                toolset=${_boost_toolset}
                address-model=${_bits}
@@ -138,7 +133,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 endif ()
 
 ExternalProject_Add(
-    dep_Boost
+    rp_Boost
     URL "https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.zip"
     URL_HASH SHA256=f22143b5528e081123c3c5ed437e92f648fe69748e95fa6e2bd41484e2986cc3
     DOWNLOAD_EXTRACT_TIMESTAMP ON
