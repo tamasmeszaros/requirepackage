@@ -187,6 +187,7 @@ function(download_package)
                     -D "AS_RP_PROCESS:INTERNAL=ON"
                     -D "RP_FIND_QUIETLY:BOOL=${RP_ARGS_QUIET}"
                     -D "RP_FIND_REQUIRED:BOOL=${RP_ARGS_REQUIRED}"
+                    -D "RP_DOWNLOAD_DIR=${RP_DOWNLOAD_DIR}"
                     "${_configs_line}"
                     ${RP_ARGS_REPOSITORY_PATH}
                 RESULT_VARIABLE CONFIG_STEP_RESULT
