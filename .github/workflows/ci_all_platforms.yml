@@ -9,8 +9,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Install opengl
-      run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev ninja-build
+    # - name: Install opengl
+    #   run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev ninja-build
+    - name: Install toolchain
+      run: sudo apt update && ninja-build
     - name: Build the example
       run: mkdir -p build-gcc && cd build-gcc && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release
     - name: Build all packages
