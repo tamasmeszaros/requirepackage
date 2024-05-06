@@ -1,65 +1,8 @@
-name: CI-all-platforms-static-release
+name: CI-all-platforms
 
 on: [push]
 
 jobs:
-
-  # buid-gcc-fedora:
-
-  #   runs-on: ubuntu-latest
-
-  #   container:
-  #     image:  fedora
-      
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - name: Install needed packages
-  #       run: yum -y install cmake g++ wget patch git gtk2-devel mesa-libGL-devel mesa-libGLU-devel ninja-build make
-  #     - name: Build the example
-  #       run: |
-  #         mkdir -p build-fedora 
-  #         cd build-fedora
-  #         cmake ../tests -DRP_ENABLE_DOWNLOADING=ON
-  #     - name: Build all packages
-  #       run: |
-  #         mkdir -p build-all-fedora
-  #         cd build-all-fedora
-  #         cmake ../packages -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/
-  #         cmake --build .
-  #     - uses: actions/upload-artifact@v1
-  #       with:
-  #         name: deps-linux-fedora-static-64bit
-  #         path: deps-linux-fedora-static-64bit.tar.gz
-
-  # buid-gcc-centos6:
-
-  #   runs-on: ubuntu-latest
-
-  #   container:
-  #     image:  meszarosq/centos6-devtoolset7:latest
-      
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - name: Build the example
-  #       run: |
-  #         source /opt/rh/devtoolset-7/enable
-  #         mkdir -p build-centos6 
-  #         cd build-centos6
-  #         cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release
-  #     - name: Build all packages
-  #       run: |
-  #         source /opt/rh/devtoolset-7/enable
-  #         mkdir -p build-all-centos6
-  #         cd build-all-centos6 
-  #         cmake ../packages -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_INSTALL_PREFIX=/opt/PrusaSlicerDeps/ -DRP_FORCE_DOWNLOADING=ON
-  #         cmake --build .
-  #     - name: Create archive of dependencies
-  #       run: tar -cvzhf deps-linux-static-64bit.tar.gz /opt/PrusaSlicerDeps
-  #     - uses: actions/upload-artifact@v1
-  #       with:
-  #         name: deps-linux-static-64bit
-  #         path: deps-linux-static-64bit.tar.gz
-
   build-gcc:
 
     runs-on: ubuntu-latest
