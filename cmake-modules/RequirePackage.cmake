@@ -143,6 +143,7 @@ function(download_package)
                 -D "RP_FIND_REQUIRED:BOOL=OFF"
                 -D "BUILD_SHARED_LIBS=${RP_BUILD_SHARED_LIBS}"
                 -D "AS_RP_PROCESS:INTERNAL=TRUE"
+                -D "RP_DOWNLOAD_DIR=${RP_DOWNLOAD_DIR}"
                 "${_configs_line}"
                 "${_postfix_line}"
                 ${_apple_line}
