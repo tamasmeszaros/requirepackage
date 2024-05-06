@@ -1,5 +1,6 @@
 # RP Package manager default install dir will be set globally
-set(RP_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dependencies CACHE STRING "Dependencies location")
+set(RP_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dependencies CACHE STRING "Dependencies install location")
+set(RP_DOWNLOAD_DIR ${PROJECT_BINARY_DIR}/downloads CACHE STRING "Dependencies download location")
 
 if (MSVC)
     set(_default_confs "Release;Debug")

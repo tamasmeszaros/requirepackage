@@ -187,6 +187,7 @@ function(rp_add_cmake_project projectname)
       rp_${projectname}
       INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}
       BINARY_DIR          ${RP_PACKAGE_BUILD_DIR}
+      DOWNLOAD_DIR        ${RP_DOWNLOAD_DIR}
       DOWNLOAD_EXTRACT_TIMESTAMP ON
       LIST_SEPARATOR |
       CMAKE_ARGS         
