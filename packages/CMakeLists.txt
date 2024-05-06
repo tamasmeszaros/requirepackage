@@ -13,6 +13,8 @@ endmacro()
 
 find_package(Git QUIET REQUIRED)
 
+set(PATCH_CMD ${GIT_EXECUTABLE} apply --verbose --ignore-space-change --whitespace=fix)
+
 macro(subdirlist result curdir)
   file(GLOB children RELATIVE ${curdir} ${curdir}/*)
   set(dirlist "")
