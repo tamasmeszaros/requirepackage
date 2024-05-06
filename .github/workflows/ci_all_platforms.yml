@@ -20,7 +20,7 @@ jobs:
         mkdir -p build-all-gcc 
         cd build-all-gcc
         cmake ../packages -GNinja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
-        cmake --build .
+        cmake --build . -- -j1
 
   build-mac:
 
@@ -37,7 +37,7 @@ jobs:
         mkdir -p build-all-mac 
         cd build-all-mac 
         cmake ../packages -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DRP_FORCE_DOWNLOADING=ON
-        cmake --build . -- -j
+        cmake --build . -- -j1
 
   build-msvc:
 
