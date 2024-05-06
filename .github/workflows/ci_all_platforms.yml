@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Install opengl
       run: sudo apt update && sudo apt install -y libgtk2.0-dev libgl1-mesa-dev libglu1-mesa-dev ninja-build
     - name: Build the example
@@ -25,7 +25,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the example
       run: mkdir -p build-mac && cd build-mac && cmake ../tests -DRP_ENABLE_DOWNLOADING=ON -DRP_CONFIGURATION_TYPES=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
     - name: Build all packages
@@ -42,7 +42,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the example
       run: |
         mkdir build-win 
@@ -64,7 +64,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Download ninja
       run: choco install ninja
     - name: Build the example
