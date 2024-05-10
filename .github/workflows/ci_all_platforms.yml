@@ -55,7 +55,7 @@ jobs:
         mkdir build-all-win
         cd build-all-win
         cmake ../packages -DBUILD_SHARED_LIBS=OFF -DRP_FORCE_DOWNLOADING=ON
-        cmake --build . --config Release -- /m
+        cmake --build . --config Release -j1
     - uses: actions/upload-artifact@v1
       with:
         name: windows-static-64bit
@@ -79,7 +79,7 @@ jobs:
         mkdir build-all-mingw
         cd build-all-mingw
         cmake ../packages -GNinja -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_RC_COMPILER=windres -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DRP_FORCE_DOWNLOADING=ON
-        cmake --build .
+        cmake --build . -j1
     - uses: actions/upload-artifact@v1
       with:
         name: mingw-static-64bit
