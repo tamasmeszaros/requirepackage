@@ -19,7 +19,7 @@ else()
     set(CLIPPER_BUILD_TYPE RELEASE)
 endif()
 
-FIND_PATH(CLIPPER_INCLUDE_DIRS clipper.hpp
+FIND_PATH(CLIPPER_INCLUDE_DIRS polyclipping/clipper.hpp
     $ENV{CLIPPER_PATH}
     $ENV{CLIPPER_PATH}/cpp/
     $ENV{CLIPPER_PATH}/include/
